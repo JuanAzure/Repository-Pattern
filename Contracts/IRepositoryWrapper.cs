@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Contracts
 {
@@ -8,7 +9,10 @@ namespace Contracts
     {
         IOwnerRepository Owner { get; }
         IAccountRepository Account { get; }
-        void Save();
+        IArticuloRepository Articulo { get; }
+        ICategoriaRepository Categoria { get; }
+
+        Task Save();
 
     }
 }

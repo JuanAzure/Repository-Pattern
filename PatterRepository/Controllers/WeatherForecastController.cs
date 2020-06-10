@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Contracts;
 using LoggerService;
 using Microsoft.AspNetCore.Mvc;
@@ -45,11 +46,11 @@ namespace PatterRepository.Controllers
 
         [Route("Repository")]
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             _logger.LogInfo("Fetching all Account from the StoraSge");
-            //var AccountList = _repoWrapper.Owner.FindCondition(x => x.Address.Contains("ICAS"));
-            var AccountList = _repoWrapper.Owner.FindAll();
+            
+            var AccountList = await _repoWrapper.Owner.GetAllOwnersAsync();
             _logger.LogInfo($"Returning {AccountList.Count()} Account.");
             return Ok(AccountList);
         }

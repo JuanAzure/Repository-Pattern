@@ -3,14 +3,19 @@ using Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Repository
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
         private RepositoryContext _repoContext;
+
         private IOwnerRepository _owner;
         private IAccountRepository _account;
+        private IArticuloRepository _articulo;
+        private ICategoriaRepository _categoria;
+
 
         public IOwnerRepository Owner
         {
@@ -36,15 +41,38 @@ namespace Repository
             }
         }
 
+        public IArticuloRepository Articulo
+        {
+            get
+            {
+                if (_articulo == null)
+                {
+                    _articulo = new ArticuloRepository(_repoContext);
+                }
+                return _articulo;
+            }
+        }
+
+        public ICategoriaRepository Categoria
+        {
+            get
+            {
+                if (_categoria == null)
+                {
+                    _categoria = new CategoriaRepository(_repoContext);
+                }
+                return _categoria;
+            }
+        }
 
         public RepositoryWrapper(RepositoryContext repositoryContext)
         {
             _repoContext = repositoryContext;
         }
 
-        public void Save()
+        public async Task Save()
         {
-            _repoContext.SaveChanges();
+          await  _repoContext.SaveChangesAsync();
         }
 
     }
