@@ -9,7 +9,9 @@ namespace PatterRepository
         public MappingProfile()
         {
             CreateMap<Owner, OwnerDto>();
-            CreateMap<Account, AccountDto>();
+            CreateMap<Account, AccountDto>()
+                .ForMember(c=>c.Owner,opt=>opt.MapFrom(x=>x.owner.Name)
+                );
         }
     }
 }

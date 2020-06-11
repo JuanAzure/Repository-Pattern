@@ -11,16 +11,10 @@ namespace Repository
 {
     public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
     {
-        public OwnerRepository(RepositoryContext repositoryContext) : base(repositoryContext)
-        {
-
-        }
-
+        public OwnerRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
         public async Task<IEnumerable<Owner>> GetAllOwnersAsync()
         {
-            return await FindAll()
-                .OrderBy(ow=>ow.Name)                
-             .ToListAsync();
+            return await FindAll(trackChanges:false).OrderBy(ow => ow.Name).ToListAsync();
         }
 
         public async Task<Owner> GetOwnerByIdAsync(int ownerId)
@@ -28,12 +22,10 @@ namespace Repository
             return await FindCondition(owner => owner.Id.Equals(ownerId))
                 .FirstOrDefaultAsync();
         }
-
         public async Task<Owner> GetOwnerWithDetailsAsync(int ownerId)
         {
             return await FindCondition(owner => owner.Id.Equals(ownerId))
-                .Include(ac => ac.Accounts)
-                .FirstOrDefaultAsync();
+                .Include(ac => ac.Accounts).FirstOrDefaultAsync();
         }
 
         public void CreateOwner(Owner owner)
@@ -50,7 +42,5 @@ namespace Repository
         {
             Delete(owner);
         }
-
-
     }
 }

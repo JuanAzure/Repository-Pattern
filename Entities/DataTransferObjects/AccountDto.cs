@@ -9,6 +9,6 @@ namespace Entities.DataTransferObjects
         public int Id { get; set; }
         public DateTime DateCreated { get; set; }
         public string AccountType { get; set; }
-        //public string Owner { get; set; }
+        public string Owner { get; set; }
     }
 }

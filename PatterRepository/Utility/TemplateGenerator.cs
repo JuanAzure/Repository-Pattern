@@ -18,7 +18,7 @@ namespace PatterRepository.Utility
         public string GetHTMLString()
         {
             //var employees = DataStorage.GetAllEmployess();
-            var employees = _repoWrapper.Owner.FindAll();
+            var employees = _repoWrapper.Owner.FindAll(trackChanges:false);
             var sb = new StringBuilder();
             sb.Append(@"
                         <html>

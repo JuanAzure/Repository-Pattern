@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Repository
 {
-    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T:class
+    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         public RepositoryContext RepositoryContext { get; set; }
         public RepositoryBase(RepositoryContext repositoryContext)
@@ -27,10 +27,18 @@ namespace Repository
             RepositoryContext.Set<T>().Remove(entity);
         }
 
-        public IQueryable<T> FindAll()
-        {
-            return RepositoryContext.Set<T>().AsNoTracking();
-        }
+        //public IQueryable<T> FindAll()
+        //{
+        //    return RepositoryContext.Set<T>().AsNoTracking();
+        //}
+
+        public IQueryable<T> FindAll(bool trackChanges) => !trackChanges ?
+        RepositoryContext.Set<T>().AsNoTracking() : RepositoryContext.Set<T>();
+
+        //public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression,
+        //       bool trackChanges) =>!trackChanges ?RepositoryContext.Set<T>().Where(expression)
+        //       .AsNoTracking() :RepositoryContext.Set<T>().Where(expression);
+
 
         public IQueryable<T> FindCondition(Expression<Func<T, bool>> expression)
         {

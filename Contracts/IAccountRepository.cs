@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Contracts
 {
-   public interface IAccountRepository:IRepositoryBase<Account>
+   public interface IAccountRepository:
+        IRepositoryBase<Account>
     {
-        Task<IEnumerable<Account>> GetAllOwnersAsync();
-
+        Task<IEnumerable<Account>> GetAllOwnersAsync(bool trackChanges);
     }
 }

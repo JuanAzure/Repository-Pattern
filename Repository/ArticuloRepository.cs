@@ -20,7 +20,7 @@ namespace Repository
         {
             return
 
-                 await FindAll()
+                 await FindAll(trackChanges:false)
                  .Include(ar => ar.Categoria)
                 //.OrderBy(ar => ar.Descripcion)
                 .ToListAsync();

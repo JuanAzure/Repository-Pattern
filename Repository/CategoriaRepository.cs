@@ -18,11 +18,9 @@ namespace Repository
 
         public async Task<IEnumerable<Categoria>> GetAllCategoriaAsync()
         {
-            return await FindAll()
+            return await FindAll(trackChanges:false)
                .OrderBy(ar => ar.Descripcion)
                .ToListAsync();
-
-
         }
 
         public async Task<Categoria> GetCategoriaByIdAsync(int CategoriaId)
@@ -33,8 +31,7 @@ namespace Repository
 
         public async Task<Categoria> GetCategoriaWithDetailsAsync(int CategoriaId)
         {
-            return await FindCondition(ar => ar.IdCategoria.Equals(CategoriaId))
-                //.Include(ac => ac.ar)
+            return await FindCondition(ar => ar.IdCategoria.Equals(CategoriaId))                
                 .FirstOrDefaultAsync();
         }
 
