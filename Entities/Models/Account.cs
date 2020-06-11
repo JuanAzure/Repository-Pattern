@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Authentication.ExtendedProtection;
-using System.Text;
 
 namespace Entities.Models
 {
@@ -11,8 +8,8 @@ namespace Entities.Models
     [Table("account")]
     public class Account
     {
-
-        public Guid AccountId { get; set; }
+        [Column("AccountId")]
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Date created requerid")]
         public DateTime DateCreated { get; set; }
@@ -21,8 +18,8 @@ namespace Entities.Models
         public string AccountType { get; set; }
 
         [ForeignKey(nameof(Owner))]
-        public Guid OwnerId { get; set; }
+        public int OwnerId { get; set; }
 
-        public Owner Owner { get; set; }
+        public Owner owner { get; set; }
     }
 }

@@ -48,12 +48,10 @@ namespace PatterRepository.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            _logger.LogInfo("Fetching all Account from the StoraSge");
-            var AccountList =  _repoWrapper.Account.FindAll();
-
-            var AccountLists1 = await _repoWrapper.Owner.GetAllOwnersAsync();
-            _logger.LogInfo($"Returning {AccountList.Count()} Account.");
-            return Ok(AccountList);
+            _logger.LogInfo("Fetching all Account from the StoraSge");            
+            var AccountLists = await _repoWrapper.Owner.GetAllOwnersAsync();
+            _logger.LogInfo($"Returning {AccountLists.Count()} Account.");
+            return Ok(AccountLists);
         }
     }
 }

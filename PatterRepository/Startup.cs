@@ -1,3 +1,4 @@
+using AutoMapper;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using LoggerService;
@@ -35,6 +36,7 @@ namespace PatterRepository
             services.ConfigureRepositoryWrapper();
             services.AddControllers();
             services.AddScoped<TemplateGenerator>();
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

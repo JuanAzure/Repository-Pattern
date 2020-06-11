@@ -9,7 +9,8 @@ namespace Entities.Models
     [Table("owner")]
     public class Owner
     {
-        public Guid OwnerId { get; set; }
+        [Column("OwnerId")]
+        public int Id { get; set; }
 
         [Required(ErrorMessage ="Name is requerid")]
         [StringLength(60,ErrorMessage ="Name can`t be than 60 characters")]

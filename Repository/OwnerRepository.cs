@@ -19,19 +19,19 @@ namespace Repository
         public async Task<IEnumerable<Owner>> GetAllOwnersAsync()
         {
             return await FindAll()
-             .Include(ac => ac.Accounts)
+                .OrderBy(ow=>ow.Name)                
              .ToListAsync();
         }
 
-        public async Task<Owner> GetOwnerByIdAsync(Guid ownerId)
+        public async Task<Owner> GetOwnerByIdAsync(int ownerId)
         {
-            return await FindCondition(owner => owner.OwnerId.Equals(ownerId))
+            return await FindCondition(owner => owner.Id.Equals(ownerId))
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<Owner> GetOwnerWithDetailsAsync(Guid ownerId)
+        public async Task<Owner> GetOwnerWithDetailsAsync(int ownerId)
         {
-            return await FindCondition(owner => owner.OwnerId.Equals(ownerId))
+            return await FindCondition(owner => owner.Id.Equals(ownerId))
                 .Include(ac => ac.Accounts)
                 .FirstOrDefaultAsync();
         }

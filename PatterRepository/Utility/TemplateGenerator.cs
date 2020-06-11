@@ -42,7 +42,7 @@ namespace PatterRepository.Utility
                                     <td>{2}</td>  
                                     <td>{3}</td>                                    
 
-                                  </tr>", emp.OwnerId, emp.DateOfBirth.ToShortDateString(),emp.Name,emp.Address);
+                                  </tr>", emp.Id, emp.DateOfBirth.ToShortDateString(),emp.Name,emp.Address);
             }
 
             sb.Append(@"
