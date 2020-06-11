@@ -17,17 +17,14 @@ namespace Repository
             return await FindAll(trackChanges:false).OrderBy(ow => ow.Name).ToListAsync();
         }
 
-        public async Task<Owner> GetOwnerByIdAsync(int ownerId)
-        {
-            return await FindCondition(owner => owner.Id.Equals(ownerId))
-                .FirstOrDefaultAsync();
-        }
-        public async Task<Owner> GetOwnerWithDetailsAsync(int ownerId)
-        {
-            return await FindCondition(owner => owner.Id.Equals(ownerId))
-                .Include(ac => ac.Accounts).FirstOrDefaultAsync();
-        }
+        public async Task<Owner> GetOwnerByIdAsync(int ownerId,bool trackChanges)=>
+        
+             await FindCondition(owner => owner.Id.Equals(ownerId),trackChanges).FirstOrDefaultAsync();
 
+        public async Task<Owner> GetOwnerWithDetailsAsync(int ownerId,bool trackChanges)=>
+        
+             await FindCondition(owner => owner.Id.Equals(ownerId),trackChanges)
+                                                  .Include(ac => ac.Accounts).FirstOrDefaultAsync();
         public void CreateOwner(Owner owner)
         {
             Create(owner);
@@ -42,5 +39,15 @@ namespace Repository
         {
             Delete(owner);
         }
+
+        //public Task<Owner> GetOwnerByIdAsync(int ownerId)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public Task<Owner> GetOwnerWithDetailsAsync(int ownerId)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

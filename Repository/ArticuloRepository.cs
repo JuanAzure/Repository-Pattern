@@ -18,28 +18,17 @@ namespace Repository
 
         public async Task<IEnumerable<Articulo>> GetAllArticuloAsync()
         {
-            return
-
-                 await FindAll(trackChanges:false)
-                 .Include(ar => ar.Categoria)
-                //.OrderBy(ar => ar.Descripcion)
-                .ToListAsync();
-
+            return await FindAll(trackChanges:false).Include(ar => ar.Categoria).ToListAsync();
         }
 
-        public async Task<Articulo> GetArticuloByIdAsync(int ArticuloId)
-        {
-            return await FindCondition(owner => owner.IdArticulo.Equals(ArticuloId))
-                .FirstOrDefaultAsync();
-        }
+        public async Task<Articulo> GetArticuloByIdAsync(int ArticuloId, bool trackChanges) =>
+            await FindCondition(ar => ar.IdArticulo.Equals(ArticuloId), trackChanges)            
+            .SingleOrDefaultAsync();
 
-        public async Task<Articulo> GetArticuloWithDetailsAsync(int ArticuloId)
-        {
-            return await FindCondition(ar => ar.IdArticulo.Equals(ArticuloId))
-                .Include(ac => ac.Categoria.Nombre)
-                .FirstOrDefaultAsync();
-        }
+        public async Task<Articulo> GetArticuloWithDetailsAsync(int ArticuloId, bool trackChanges) =>
 
+            await FindCondition(ar => ar.IdArticulo.Equals(ArticuloId), trackChanges).FirstOrDefaultAsync();
+     
         public void CreateArticulo(Articulo articulo)
         {
             Create(articulo);
@@ -55,5 +44,9 @@ namespace Repository
             Delete(articulo);
         }
 
+        //public Task<Articulo> GetArticuloWithDetailsAsync(int ArticuloId)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

@@ -23,17 +23,16 @@ namespace Repository
                .ToListAsync();
         }
 
-        public async Task<Categoria> GetCategoriaByIdAsync(int CategoriaId)
-        {
-            return await FindCondition(owner => owner.IdCategoria.Equals(CategoriaId))
-                .FirstOrDefaultAsync();
-        }
+        public async Task<Categoria> GetCategoriaByIdAsync(int CategoriaId, bool trackChanges)
 
-        public async Task<Categoria> GetCategoriaWithDetailsAsync(int CategoriaId)
-        {
-            return await FindCondition(ar => ar.IdCategoria.Equals(CategoriaId))                
-                .FirstOrDefaultAsync();
-        }
+            => await FindCondition(c => c.IdCategoria.Equals(CategoriaId), trackChanges).SingleOrDefaultAsync();
+        //{
+        //    return await FindCondition(owner => owner.IdCategoria.Equals(CategoriaId))
+        //        .FirstOrDefaultAsync();
+        //}
+
+        public async Task<Categoria> GetCategoriaWithDetailsAsync(int CategoriaId, bool trackChanges) =>
+            await FindCondition(c => c.IdCategoria.Equals(CategoriaId), trackChanges).FirstOrDefaultAsync();        
 
         public void CreateCategoria(Categoria categoria)
         {

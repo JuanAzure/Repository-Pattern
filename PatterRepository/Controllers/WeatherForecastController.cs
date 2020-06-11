@@ -24,11 +24,9 @@ namespace PatterRepository.Controllers
 
 
         public WeatherForecastController(ILoggerManager logger, IRepositoryWrapper repoWrapper)
-
         {
             _logger = logger;
             _repoWrapper = repoWrapper;
-
         }
 
         [HttpGet]

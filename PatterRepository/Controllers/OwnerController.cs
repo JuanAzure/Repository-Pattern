@@ -38,7 +38,7 @@ namespace PatterRepository.Controllers
         public async Task<IActionResult> GetOwnerById(int id)
         {
             _logger.LogInfo($"Returned owner with id: {id}");
-            var owner = await _repository.Owner.GetOwnerByIdAsync(id);
+            var owner = await _repository.Owner.GetOwnerByIdAsync(id, trackChanges: false);
 
             var ownerResult = _mapper.Map<OwnerDto>(owner);
             _logger.LogInfo($"Returning {ownerResult} owner.");
@@ -49,7 +49,7 @@ namespace PatterRepository.Controllers
         public async Task<IActionResult> GetOwnerWithDetails(int id)
         {
             _logger.LogInfo($"Returned owner with id: {id}");
-            var owner = await _repository.Owner.GetOwnerWithDetailsAsync(id);
+            var owner = await _repository.Owner.GetOwnerWithDetailsAsync(id, trackChanges: false);
 
             var ownerResult = _mapper.Map<OwnerDto>(owner);
             _logger.LogInfo($"Returning ,{ownerResult} owner/account.");

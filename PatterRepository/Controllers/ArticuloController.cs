@@ -21,8 +21,7 @@ namespace PatterRepository.Controllers
             _logger = logger;
             _repoWrapper = repoWrapper;
         }
-        
-        
+                
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
