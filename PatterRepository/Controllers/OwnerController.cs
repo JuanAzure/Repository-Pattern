@@ -13,9 +13,9 @@ namespace PatterRepository.Controllers
     [ApiController]
     public class OwnerController : ControllerBase
     {
-        private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
-        private IMapper _mapper;
+        private readonly ILoggerManager _logger;
+        private readonly IRepositoryWrapper _repository;
+        private readonly IMapper _mapper;
         public OwnerController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
         {
             _logger = logger;
@@ -39,9 +39,16 @@ namespace PatterRepository.Controllers
         {
             _logger.LogInfo($"Returned owner with id: {id}");
             var owner = await _repository.Owner.GetOwnerByIdAsync(id, trackChanges: false);
+            if (owner == null)
+            {
+                _logger.LogInfo($"Owner with id: {id} doesn't exist in the database.");
+                _logger.LogError($"Something went wrong in the {nameof(GetOwnerById)}");
+                return NotFound();
+            }
 
             var ownerResult = _mapper.Map<OwnerDto>(owner);
             _logger.LogInfo($"Returning {ownerResult} owner.");
+                       
             return Ok(ownerResult);
         }
 

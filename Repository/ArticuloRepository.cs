@@ -11,11 +11,7 @@ namespace Repository
 {
     public class ArticuloRepository : RepositoryBase<Articulo>, IArticuloRepository
     {
-        public ArticuloRepository(RepositoryContext repositoryContext) : base(repositoryContext)
-        {
-
-        }
-
+        public ArticuloRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
         public async Task<IEnumerable<Articulo>> GetAllArticuloAsync()
         {
             return await FindAll(trackChanges:false).Include(ar => ar.Categoria).ToListAsync();
