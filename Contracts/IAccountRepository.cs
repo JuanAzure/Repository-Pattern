@@ -8,8 +8,8 @@ namespace Contracts
 {
    public interface IAccountRepository : IRepositoryBase<Account>
     {
-        Task<IEnumerable<Account>> GetAllOwnersAsync(bool trackChanges);
-        Task<Account> GetOwnerWithDetailsAsync(int accountId, bool trackChanges);
+        Task<IEnumerable<Account>> GetAllAccountsAsync(bool trackChanges);
+        Task<Account> GetAccountWithDetailsAsync(int accountId, bool trackChanges);
         void CreateAccount(Account articulo);
     }
 }

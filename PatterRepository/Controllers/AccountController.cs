@@ -28,6 +28,26 @@ namespace PatterRepository.Controllers
             _mapper = mapper;
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> Account()        {
+            var account = await _repository.Account.GetAllAccountsAsync(trackChanges: false);
+            _logger.LogInfo($"Returned all owners from database.");
+            var ownersResult = _mapper.Map<IEnumerable<AccountDto>>(account);
+            _logger.LogInfo($"Returning {ownersResult} Owners.");
+            return Ok(ownersResult);
+        }
+
+        [HttpGet("{id}",Name ="AccounId") ]
+        public async Task<IActionResult> GetAccount(int id)
+        {
+            var account = await _repository.Account.GetAccountWithDetailsAsync(id,trackChanges: false);
+            _logger.LogInfo($"Returned all owners from database.");
+            var ownersResult = _mapper.Map<AccountDto>(account);
+            _logger.LogInfo($"Returning {ownersResult} Owners.");
+            return Ok(ownersResult);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateAccount([FromBody]AccountForCreationDto account)
         {
@@ -38,16 +58,14 @@ namespace PatterRepository.Controllers
             }
 
             var accountEntity = _mapper.Map<Account>(account);
-
             _repository.Account.CreateAccount(accountEntity);
             await _repository.SaveAsync();
 
-            var AccountToReturn = _mapper.Map<AccountResulDto>(accountEntity);
+            var consulta = await _repository.Account.GetAccountWithDetailsAsync(accountEntity.Id, trackChanges: false);
+            var AccountToReturn = _mapper.Map<AccountDto>(consulta);            
 
-            return CreatedAtRoute("AccountId", new { id= AccountToReturn.Id}, AccountToReturn);
-            //return CreatedAtRoute("accountId", AccountToReturn,null);
+            return CreatedAtRoute("AccounId", new { id= AccountToReturn.Id}, AccountToReturn);
 
-            // return Ok(AccountToReturn);
 
 
         }

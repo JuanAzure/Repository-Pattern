@@ -39,15 +39,5 @@ namespace Repository
         {
             Delete(owner);
         }
-
-        //public Task<Owner> GetOwnerByIdAsync(int ownerId)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<Owner> GetOwnerWithDetailsAsync(int ownerId)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

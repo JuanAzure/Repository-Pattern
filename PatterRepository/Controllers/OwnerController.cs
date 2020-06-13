@@ -64,14 +64,5 @@ namespace PatterRepository.Controllers
             
         }
 
-        [HttpGet("{id}/accounts")]
-        public async Task<IActionResult> GetAccount(int id)
-        {
-            var account = await _repository.Account.GetAllOwnersAsync(trackChanges:false);
-            _logger.LogInfo($"Returned all owners from database.");
-            var ownersResult = _mapper.Map<IEnumerable<AccountDto>>(account);
-            _logger.LogInfo($"Returning {ownersResult.Count()} Owners.");
-            return Ok(ownersResult);
-        }
     }
 }

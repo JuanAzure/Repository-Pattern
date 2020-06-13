@@ -67,7 +67,7 @@ namespace PatterRepository
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute(); // MapControllers();
+                endpoints.MapControllers();
             });
         }
     }

@@ -65,15 +65,8 @@ namespace Repository
             }
         }
 
-        public RepositoryWrapper(RepositoryContext repositoryContext)
-        {
-            _repoContext = repositoryContext;
-        }
-
-        public async Task SaveAsync()
-        {
-          await  _repoContext.SaveChangesAsync();
-        }
+        public RepositoryWrapper(RepositoryContext repoContext)=> _repoContext = repoContext;        
+        public async Task SaveAsync()=> await _repoContext.SaveChangesAsync();        
 
     }
 }
