@@ -20,10 +20,17 @@ namespace Repository
             await FindCondition(ar => ar.Id.Equals(AccountId), trackChanges)
             .Include(ow=>ow.owner)
             .SingleOrDefaultAsync();
-        public void CreateAccount(Account account)
+
+        public void CreateAccountForOwner(int ownerId, Account account)
         {
+            account.OwnerId = ownerId;
             Create(account);
         }
 
+        public async Task<Account> GetAccountAsync(int OwnerId, int accountId, bool trackChanges) =>
+            await FindCondition(ac=>ac.OwnerId.Equals(OwnerId) && ac.Id.Equals(accountId),trackChanges)
+            .Include(ow=>ow.owner)
+            .SingleOrDefaultAsync();
+        
     }
 }

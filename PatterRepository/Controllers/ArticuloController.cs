@@ -13,23 +13,22 @@ namespace PatterRepository.Controllers
     [ApiController]
     public class ArticuloController : ControllerBase
     {
-        private  ILoggerManager _logger;
-        private  IRepositoryWrapper _repoWrapper;
+        private ILoggerManager _logger;
+        private IRepositoryWrapper _repoWrapper;
 
         public ArticuloController(ILoggerManager logger, IRepositoryWrapper repoWrapper)
         {
             _logger = logger;
             _repoWrapper = repoWrapper;
         }
-                
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            _logger.LogInfo("Fetching all Account from the StoraSge");            
-            var AccountList = await _repoWrapper.Articulo.GetAllArticuloAsync();       
-            _logger.LogInfo($"Returning {AccountList.Count()} Account.");            
+            _logger.LogInfo("Fetching all Account from the StoraSge");
+            var AccountList = await _repoWrapper.Articulo.GetAllArticuloAsync();
+            _logger.LogInfo($"Returning {AccountList.Count()} Account.");
             return Ok(AccountList);
         }
-
     }
 }

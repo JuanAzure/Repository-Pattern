@@ -10,6 +10,7 @@ namespace Contracts
     {
         Task<IEnumerable<Account>> GetAllAccountsAsync(bool trackChanges);
         Task<Account> GetAccountWithDetailsAsync(int accountId, bool trackChanges);
-        void CreateAccount(Account articulo);
+        Task<Account> GetAccountAsync(int OwnerId,int accountId, bool trackChanges);
+        void CreateAccountForOwner(int ownerId, Account account);
     }
 }

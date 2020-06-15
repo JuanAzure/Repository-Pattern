@@ -11,6 +11,8 @@ namespace Contracts
         Task<IEnumerable<Owner>> GetAllOwnersAsync();
         Task<Owner> GetOwnerByIdAsync(int ownerId, bool trackChanges);
         Task<Owner> GetOwnerWithDetailsAsync(int ownerId, bool trackChanges);
+
+        Task<IEnumerable<Owner>> GetByIds(IEnumerable<int> ids, bool trackChanges);
         void CreateOwner(Owner owner);
         void UpdateOwner(Owner owner);
         void DeleteOwner(Owner owner);

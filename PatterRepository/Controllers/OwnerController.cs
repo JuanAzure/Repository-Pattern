@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PatterRepository.Controllers
 {
-    [Route("api/Owner")]
+    [Route("api/owners")]
     [ApiController]
     public class OwnerController : ControllerBase
     {
@@ -50,9 +50,10 @@ namespace PatterRepository.Controllers
             _logger.LogInfo($"Returning {ownerResult} owner.");
                        
             return Ok(ownerResult);
-        }
+        }  
 
-        [HttpGet("{id}/account")]
+
+        [HttpGet("{id}/accounts")]        
         public async Task<IActionResult> GetOwnerWithDetails(int id)
         {
             _logger.LogInfo($"Returned owner with id: {id}");

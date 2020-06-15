@@ -8,7 +8,7 @@ using PatterRepository.Utility;
 
 namespace PatterRepository.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/PdfCreator")]
     [ApiController]
     public class PdfCreatorController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace PatterRepository.Controllers
             _templateGenerator = templateGenerator;
         }
 
-        [Route("pdf")]
+        
         [HttpGet]
         public IActionResult CreatePDF()
         {

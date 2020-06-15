@@ -12,6 +12,12 @@ namespace PatterRepository
             CreateMap<Account, AccountDto>()
              .ForMember(c => c.Owner, opt => opt.MapFrom(x => x.owner.Name));
             CreateMap<AccountForCreationDto, Account>();
+            CreateMap<OwnerForCreationDto, Owner>();
+            CreateMap<Owner, OwnerDtoForCreation>();
+
+            
+
+
         }
     }
 }

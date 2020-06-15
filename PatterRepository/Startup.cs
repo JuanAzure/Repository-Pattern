@@ -21,7 +21,6 @@ namespace PatterRepository
         {
             LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
-
         }
 
         public IConfiguration Configuration { get; }
@@ -31,11 +30,19 @@ namespace PatterRepository
         {
             //services.AddSingleton<ILoggerManager, LoggerManager>();
 
-            services.AddSingleton(typeof(IConverter),new SynchronizedConverter(new PdfTools()));
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.ConfigureLoggerService();
             services.ConfigureSqlServerContext(Configuration);
             services.ConfigureRepositoryWrapper();
-            services.AddControllers();
+
+            services.AddControllers(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;
+
+            }).AddXmlSerializerFormatters();
+            //.AddCustomCSVFormatter();
+
             services.AddScoped<TemplateGenerator>();
             services.AddAutoMapper(typeof(Startup));
         }
@@ -61,7 +68,7 @@ namespace PatterRepository
 
             //app.ConfigureExceptionHandler(logger);
             app.ConfigureCustomExceptionMiddleware();
-            
+
             app.UseRouting();
             app.UseAuthorization();
 

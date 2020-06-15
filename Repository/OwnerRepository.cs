@@ -25,6 +25,10 @@ namespace Repository
         
              await FindCondition(owner => owner.Id.Equals(ownerId),trackChanges)
                                                   .Include(ac => ac.Accounts).FirstOrDefaultAsync();
+
+        public async Task<IEnumerable<Owner>> GetByIds(IEnumerable<int> ids, bool trackChanges)
+             => await FindCondition(x=> ids.Contains(x.Id),trackChanges).ToListAsync();
+       
         public void CreateOwner(Owner owner)
         {
             Create(owner);
@@ -39,5 +43,7 @@ namespace Repository
         {
             Delete(owner);
         }
+
+       
     }
 }
