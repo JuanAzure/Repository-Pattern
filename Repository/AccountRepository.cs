@@ -17,7 +17,7 @@ namespace Repository
             .OrderBy(ac => ac.AccountType).ToListAsync();
 
         public async Task<Account> GetAccountWithDetailsAsync(int AccountId, bool trackChanges) =>
-            await FindCondition(ar => ar.Id.Equals(AccountId), trackChanges)
+            await FindByCondition(ar => ar.Id.Equals(AccountId), trackChanges)
             .Include(ow=>ow.owner)
             .SingleOrDefaultAsync();
 
@@ -28,9 +28,13 @@ namespace Repository
         }
 
         public async Task<Account> GetAccountAsync(int OwnerId, int accountId, bool trackChanges) =>
-            await FindCondition(ac=>ac.OwnerId.Equals(OwnerId) && ac.Id.Equals(accountId),trackChanges)
+            await FindByCondition(ac=>ac.OwnerId.Equals(OwnerId) && ac.Id.Equals(accountId),trackChanges)
             .Include(ow=>ow.owner)
             .SingleOrDefaultAsync();
-        
+
+        public void DeleteAccount(Account account)
+        {
+            Delete(account);
+        }
     }
 }

@@ -12,5 +12,7 @@ namespace Contracts
         Task<Account> GetAccountWithDetailsAsync(int accountId, bool trackChanges);
         Task<Account> GetAccountAsync(int OwnerId,int accountId, bool trackChanges);
         void CreateAccountForOwner(int ownerId, Account account);
+        void DeleteAccount(Account account);
+
     }
 }

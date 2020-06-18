@@ -40,8 +40,8 @@ namespace PatterRepository
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
 
-            }).AddXmlSerializerFormatters();
-            //.AddCustomCSVFormatter();
+            }).AddXmlSerializerFormatters()
+            .AddCustomCSVFormatter();
 
             services.AddScoped<TemplateGenerator>();
             services.AddAutoMapper(typeof(Startup));

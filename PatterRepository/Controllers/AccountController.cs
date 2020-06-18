@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,9 +6,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using LoggerService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using PatterRepository.ModelBinders;
 
 namespace PatterRepository.Controllers
@@ -28,6 +25,29 @@ namespace PatterRepository.Controllers
             _mapper = mapper;
         }
 
+        [Route("{id}/owners/{ownerId}")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAccountForOwner(int ownerId, int id)
+        {
+            var owner = await _repository.Owner.GetOwnerByIdAsync(ownerId, trackChanges: false);
+            if (owner == null)
+            {
+                _logger.LogInfo($"Owner with id: {ownerId} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var accountForOwner = await _repository.Account.GetAccountAsync(ownerId, id, trackChanges: false);
+            if (accountForOwner == null)
+            {
+                _logger.LogInfo($"Account with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            _repository.Account.DeleteAccount(accountForOwner);
+            await _repository.SaveAsync();
+
+            return NoContent();
+        }
         [HttpGet]
         public async Task<IActionResult> GetAllAccount()
         {
@@ -98,12 +118,10 @@ namespace PatterRepository.Controllers
             var AccountToReturn = _mapper.Map<AccountDto>(consulta);
 
             return CreatedAtRoute("AccounId", new { ownerId, id = AccountToReturn.Id }, AccountToReturn);
-
         }
 
-
         [HttpGet("collection/{ids}", Name = "OwnerCollection")]
-        public async Task<IActionResult> GetOwnersCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))]  IEnumerable<int> ids)
+        public async Task<IActionResult> GetOwnersCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
         {
             if (ids == null)
             {
@@ -118,10 +136,8 @@ namespace PatterRepository.Controllers
                 _logger.LogError("Some ids are not valid in a collection");
                 return NotFound();
             }
-
             var companiesToReturn = _mapper.Map<IEnumerable<OwnerDto>>(ownersEntities);
             return Ok(companiesToReturn);
-
         }
 
 
@@ -148,5 +164,9 @@ namespace PatterRepository.Controllers
            companyCollectionToReturn);
         }
 
+
+
     }
+
+
 }

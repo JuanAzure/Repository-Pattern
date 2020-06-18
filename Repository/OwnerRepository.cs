@@ -19,15 +19,17 @@ namespace Repository
 
         public async Task<Owner> GetOwnerByIdAsync(int ownerId,bool trackChanges)=>
         
-             await FindCondition(owner => owner.Id.Equals(ownerId),trackChanges).FirstOrDefaultAsync();
+             await FindByCondition(owner => owner.Id.Equals(ownerId),trackChanges).FirstOrDefaultAsync();
 
         public async Task<Owner> GetOwnerWithDetailsAsync(int ownerId,bool trackChanges)=>
         
-             await FindCondition(owner => owner.Id.Equals(ownerId),trackChanges)
+             await FindByCondition(owner => owner.Id.Equals(ownerId),trackChanges)
                                                   .Include(ac => ac.Accounts).FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Owner>> GetByIds(IEnumerable<int> ids, bool trackChanges)
-             => await FindCondition(x=> ids.Contains(x.Id),trackChanges).ToListAsync();
+             => await FindByCondition(x=> ids.Contains(x.Id),trackChanges)
+            .Include(ac=>ac.Accounts)
+            .ToListAsync();
        
         public void CreateOwner(Owner owner)
         {

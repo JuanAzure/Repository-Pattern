@@ -10,7 +10,8 @@ namespace Entities.Models
     public  class Articulo
     {
         [Key]
-        public int IdArticulo { get; set; }
+        [Column("ArticuloId")]
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Codigo is requerid")]
         [StringLength(100, ErrorMessage = "Codigo can`t be than 100 characters")]
@@ -33,7 +34,7 @@ namespace Entities.Models
         public bool? Condicion { get; set; }
 
         [ForeignKey(nameof(Categoria))]
-        public int IdCategoria { get; set; }
+        public int CategoriaId { get; set; }
         public Categoria Categoria { get; set; }
     }
 }

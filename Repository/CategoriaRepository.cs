@@ -15,39 +15,24 @@ namespace Repository
         {
 
         }
+        public async Task<IEnumerable<Categoria>> GetAllCategoriaAsync(bool trackChanges) =>
+         await FindAll(trackChanges).OrderBy(c => c.Descripcion).ToListAsync();        
+            
 
-        public async Task<IEnumerable<Categoria>> GetAllCategoriaAsync()
+        public Task<IEnumerable<Categoria>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)
         {
-            return await FindAll(trackChanges:false)
-               .OrderBy(ar => ar.Descripcion)
-               .ToListAsync();
+            throw new NotImplementedException();
         }
 
-        public async Task<Categoria> GetCategoriaByIdAsync(int CategoriaId, bool trackChanges)
 
-            => await FindCondition(c => c.IdCategoria.Equals(CategoriaId), trackChanges).SingleOrDefaultAsync();
-        //{
-        //    return await FindCondition(owner => owner.IdCategoria.Equals(CategoriaId))
-        //        .FirstOrDefaultAsync();
-        //}
 
-        public async Task<Categoria> GetCategoriaWithDetailsAsync(int CategoriaId, bool trackChanges) =>
-            await FindCondition(c => c.IdCategoria.Equals(CategoriaId), trackChanges).FirstOrDefaultAsync();        
 
-        public void CreateCategoria(Categoria categoria)
-        {
-            Create(categoria);
-        }
+        public async Task<Categoria> GetCategoriaAsync(int categoriaId, bool trackChanges) =>
+         await FindByCondition(c => c.Id.Equals(categoriaId), trackChanges)
+            //.Include(c => c.articulos)
+            .SingleOrDefaultAsync();
 
-        public void UpdateCategoria(Categoria categoria)
-        {
-            Update(categoria);
-        }
-
-        public void DeleteCategoria(Categoria categoria)
-        {
-            Delete(categoria);
-        }
-
+        public void CreateArticulo(Categoria categoria) => Create(categoria);
+        public void DeleteArticulo(Categoria categoria) => Delete(categoria);        
     }
 }

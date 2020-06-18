@@ -10,5 +10,6 @@ namespace Entities.DataTransferObjects
         public DateTime DateCreated { get; set; }
         public string AccountType { get; set; }        
         public string Owner { get; set; }       
+
     }
 }

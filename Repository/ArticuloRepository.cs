@@ -12,37 +12,24 @@ namespace Repository
     public class ArticuloRepository : RepositoryBase<Articulo>, IArticuloRepository
     {
         public ArticuloRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
-        public async Task<IEnumerable<Articulo>> GetAllArticuloAsync()
-        {
-            return await FindAll(trackChanges:false).Include(ar => ar.Categoria).ToListAsync();
-        }
+        
+        public async Task<IEnumerable<Articulo>> GetAllArticuloAsync(bool trackChanges) => 
+            await FindAll(trackChanges).OrderBy(c => c.Nombre)
+            .Include(c=>c.Categoria)
+            .ToListAsync();
 
-        public async Task<Articulo> GetArticuloByIdAsync(int ArticuloId, bool trackChanges) =>
-            await FindCondition(ar => ar.IdArticulo.Equals(ArticuloId), trackChanges)            
+        public async Task<Articulo> GetArticuloAsync(int articuloId, bool trackChanges)=>
+
+           await FindByCondition(c => c.Id.Equals(articuloId), trackChanges)
+            .Include(c=>c.Categoria)
             .SingleOrDefaultAsync();
-
-        public async Task<Articulo> GetArticuloWithDetailsAsync(int ArticuloId, bool trackChanges) =>
-
-            await FindCondition(ar => ar.IdArticulo.Equals(ArticuloId), trackChanges).FirstOrDefaultAsync();
-     
-        public void CreateArticulo(Articulo articulo)
+        public async Task<IEnumerable<Articulo>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)=>        
+        await FindByCondition(x => ids.Contains(x.Id), trackChanges).ToListAsync();
+        public void CreateArticulo(int categoriaId, Articulo articulo)
         {
+            articulo.CategoriaId = categoriaId;
             Create(articulo);
         }
-
-        public void UpdateArticulo(Articulo articulo)
-        {
-            Update(articulo);
-        }
-
-        public void DeleteArticulo(Articulo articulo)
-        {
-            Delete(articulo);
-        }
-
-        //public Task<Articulo> GetArticuloWithDetailsAsync(int ArticuloId)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public void DeleteArticulo(Articulo articulo) => Delete(articulo);
     }
 }

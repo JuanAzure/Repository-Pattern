@@ -4,12 +4,10 @@ using System.Text;
 
 namespace Entities.DataTransferObjects
 {
-   public class OwnerDtoForCreation
-    {
-        public int Id { get; set; }
+    public class OwnerForUpdateDto
+    {        
         public string Name { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public string Address { get; set; }
-        
+        public string Address { get; set; }        
     }
 }

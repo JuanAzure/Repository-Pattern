@@ -10,7 +10,8 @@ namespace Entities.Models
     public class Categoria
     {
         [Key]
-        public int IdCategoria { get; set; }
+        [Column("CategoriaId")]
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Nombre is requerid")]
         [StringLength(100, ErrorMessage = "Descripcion can`t be than 100 characters")]
@@ -20,7 +21,6 @@ namespace Entities.Models
         [StringLength(100, ErrorMessage = "Descripcion can`t be than 100 characters")]
         public string Descripcion { get; set; }
         public bool? Condicion { get; set; }
-
         public ICollection<Articulo> articulos { get; set; }
     }
 }

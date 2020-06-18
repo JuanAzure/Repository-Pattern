@@ -8,11 +8,11 @@ namespace Contracts
 {
   public interface IArticuloRepository : IRepositoryBase<Articulo>
     {
-        Task<IEnumerable<Articulo>> GetAllArticuloAsync();
-        Task<Articulo> GetArticuloByIdAsync(int ArticuloId, bool trackChanges);
-        Task<Articulo> GetArticuloWithDetailsAsync(int ArticuloId, bool trackChanges);
-        void CreateArticulo(Articulo articulo);
-        void UpdateArticulo(Articulo articulo);
+        Task<IEnumerable<Articulo>> GetAllArticuloAsync(bool trackChanges);
+        Task<Articulo> GetArticuloAsync(int articuloId, bool trackChanges);
+        void CreateArticulo(int categoriaId, Articulo articulo);
+        Task<IEnumerable<Articulo>> GetByIdsAsync(IEnumerable<int> ids, bool
+       trackChanges);
         void DeleteArticulo(Articulo articulo);
     }
 }
