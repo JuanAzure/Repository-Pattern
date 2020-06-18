@@ -10,9 +10,9 @@ namespace Contracts
     {
         Task<IEnumerable<Articulo>> GetAllArticuloAsync(bool trackChanges);
         Task<Articulo> GetArticuloAsync(int articuloId, bool trackChanges);
+        Task<Articulo> GetArticuloCategoriaAsync(int categoriaId, int id, bool trackChanges);
+        Task<IEnumerable<Articulo>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges);
         void CreateArticulo(int categoriaId, Articulo articulo);
-        Task<IEnumerable<Articulo>> GetByIdsAsync(IEnumerable<int> ids, bool
-       trackChanges);
         void DeleteArticulo(Articulo articulo);
     }
 }

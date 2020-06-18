@@ -120,8 +120,9 @@ namespace PatterRepository.Controllers
             return CreatedAtRoute("AccounId", new { ownerId, id = AccountToReturn.Id }, AccountToReturn);
         }
 
-        [HttpGet("collection/{ids}", Name = "OwnerCollection")]
-        public async Task<IActionResult> GetOwnersCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
+        [HttpGet("collection/({ids})", Name = "OwnerCollection")]
+        public async Task<IActionResult> GetOwnersCollection
+            ([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
         {
             if (ids == null)
             {
@@ -163,9 +164,6 @@ namespace PatterRepository.Controllers
             return CreatedAtRoute("OwnerCollection", new { ids },
            companyCollectionToReturn);
         }
-
-
-
     }
 
 

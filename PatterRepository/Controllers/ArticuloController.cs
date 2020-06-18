@@ -61,8 +61,7 @@ namespace PatterRepository.Controllers
 
         [Route("{categoriaId}/categorias")]
         [HttpPost]
-        public async Task<IActionResult> CreateAccount(int categoriaId,
-            [FromBody] ArticuloForCreationDto articulo)
+        public async Task<IActionResult> CreateArticulo(int categoriaId, [FromBody]  ArticuloForCreationDto articulo)
         {
             if (articulo == null)
             {
@@ -70,7 +69,7 @@ namespace PatterRepository.Controllers
                 return BadRequest("ArticuloForCreationDto object is null");
             }
 
-            var categoria = _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
+            var categoria = await _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
             if (categoria == null)
             {
                 _logger.LogInfo($"Categoria with id: {categoriaId} doesn't exist in the database.");
@@ -82,11 +81,62 @@ namespace PatterRepository.Controllers
             _repository.Articulo.CreateArticulo(categoriaId, articuloEntity);
             await _repository.SaveAsync();
 
-            //var consulta = await _repository.Account.GetAccountWithDetailsAsync(accountEntity.Id, trackChanges: false);
-            var ArticuloToReturn = _mapper.Map<ArticuloDto>(articuloEntity);
-
-            return CreatedAtRoute("ArticuloId", new { categoriaId, id = ArticuloToReturn.Id }, ArticuloToReturn);
+            var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.Id, trackChanges: false);
+            var ArticuloToReturn = _mapper.Map<ArticuloDto>(articuloCategoria);
+            return CreatedAtRoute("ArticuloId", new { id = ArticuloToReturn.Id }, ArticuloToReturn);
         }
 
+        [Route("{id}/categorias/{categoriaId}")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteArticuloForCategoria(int categoriaId, int id)
+        {
+            var categoria = await _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
+            if (categoria == null)
+            {
+                _logger.LogInfo($"Categoria with id: {categoriaId} doesn't exist in the  database.");
+
+                return NotFound();
+            }
+            var ArticuloForCategoria = await _repository.Articulo.GetArticuloCategoriaAsync(categoriaId, id, trackChanges: false);
+
+            if (ArticuloForCategoria == null)
+            {
+                _logger.LogInfo($"Employee with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.Articulo.DeleteArticulo(ArticuloForCategoria);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
+
+        [Route("{id}/categorias/{categoriaId}")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateArticuloForCategoria(int categoriaId, int id, [FromBody] ArticuloForUpdateDto articulo)
+        {
+            if (articulo == null)
+            {
+                _logger.LogError("ArticuloForUpdateDto object sent from client is null.");
+                return BadRequest("ArticuloForUpdateDto object is null");
+            }
+
+            var categoria = await _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
+            if (categoria == null)
+            {
+                _logger.LogInfo($"Categoria with id: {categoriaId} doesn't exist in the database.");
+
+                return NotFound();
+            }
+            var articuloEntity = await _repository.Articulo.GetArticuloCategoriaAsync(categoriaId, id, trackChanges: true);
+
+            if (articuloEntity == null)
+            {
+                _logger.LogInfo($"Articulo with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(articulo, articuloEntity);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
     }
 }

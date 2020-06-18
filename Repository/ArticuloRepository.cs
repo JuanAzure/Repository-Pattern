@@ -23,6 +23,7 @@ namespace Repository
            await FindByCondition(c => c.Id.Equals(articuloId), trackChanges)
             .Include(c=>c.Categoria)
             .SingleOrDefaultAsync();
+
         public async Task<IEnumerable<Articulo>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)=>        
         await FindByCondition(x => ids.Contains(x.Id), trackChanges).ToListAsync();
         public void CreateArticulo(int categoriaId, Articulo articulo)
@@ -31,5 +32,8 @@ namespace Repository
             Create(articulo);
         }
         public void DeleteArticulo(Articulo articulo) => Delete(articulo);
+
+        public async Task<Articulo> GetArticuloCategoriaAsync(int categoriaId, int id, bool trackChanges)=>
+            await FindByCondition(e => e.CategoriaId.Equals(categoriaId) && e.Id.Equals(id), trackChanges).SingleOrDefaultAsync();
     }
 }

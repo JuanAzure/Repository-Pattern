@@ -58,7 +58,6 @@ namespace PatterRepository.Controllers
         {
             _logger.LogInfo($"Returned owner with id: {id}");
             var owner = await _repository.Owner.GetOwnerWithDetailsAsync(id, trackChanges: false);
-
             var ownerResult = _mapper.Map<OwnerDto>(owner);
             _logger.LogInfo($"Returning ,{ownerResult} owner/account.");
             return Ok(ownerResult);
