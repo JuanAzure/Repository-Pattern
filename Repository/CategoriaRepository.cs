@@ -19,11 +19,11 @@ namespace Repository
                  .OrderBy(c => c.Nombre)
                 .ToListAsync();
         public async Task<IEnumerable<Categoria>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges) => await
-            FindByCondition(c => ids.Contains(c.Id), trackChanges)         
+            FindByCondition(c => ids.Contains(c.Id), trackChanges).Include(a=>a.Articulos)         
             .ToListAsync();
 
         public async Task<Categoria> GetCategoriaAsync(int categoriaId, bool trackChanges) => await
-            FindByCondition(c => c.Id.Equals(categoriaId), trackChanges).Include(a => a.articulos)
+            FindByCondition(c => c.Id.Equals(categoriaId), trackChanges).Include(a => a.Articulos)
             .SingleOrDefaultAsync();
         public void CreateCategoria(Categoria categoria) => Create(categoria);
         public void DeleteCategoria(Categoria categoria) => Delete(categoria);

@@ -15,6 +15,8 @@ namespace Repository
         private IAccountRepository _account;
         private IArticuloRepository _articulo;
         private ICategoriaRepository _categoria;
+        private IPersonaRepository _persona;
+
 
 
         public IOwnerRepository Owner
@@ -64,6 +66,19 @@ namespace Repository
                 return _categoria;
             }
         }
+
+        public IPersonaRepository Persona
+        {
+            get
+            {
+                if (_persona == null)
+                {
+                    _persona = new PersonaRepository(_repoContext);
+                }
+                return _persona;
+            }
+        }
+
 
         public RepositoryWrapper(RepositoryContext repoContext)=> _repoContext = repoContext;        
         public async Task SaveAsync()=> await _repoContext.SaveChangesAsync();        

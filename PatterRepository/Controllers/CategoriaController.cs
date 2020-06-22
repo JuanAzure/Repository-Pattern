@@ -60,8 +60,7 @@ namespace PatterRepository.Controllers
 
 
         [HttpGet("collection/{ids}", Name = "CategoriaCollection")]
-        public async Task<IActionResult> GetCategoriesCollection
-            ([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
+        public async Task<IActionResult> GetCategoriesCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
         {
             if (ids == null)
             {
@@ -70,7 +69,7 @@ namespace PatterRepository.Controllers
             }
 
             var categoriesEntities = await _repository.Categoria.GetByIdsAsync(ids, trackChanges: false);
-                
+
             if (ids.Count() != categoriesEntities.Count())
             {
                 _logger.LogError("Some ids are not valid in a collection");
@@ -140,7 +139,8 @@ namespace PatterRepository.Controllers
                 _logger.LogInfo($"Categoria with id: {id} doesn't exist in the database.");
 
                 return NotFound();
-            }            
+            } 
+            
             _mapper.Map(_categoria, categoriaEntity);
             await _repository.SaveAsync();
             return NoContent();
@@ -151,13 +151,13 @@ namespace PatterRepository.Controllers
         public async Task<IActionResult> DeleteCategoria(int id)
         {
             var categoriaEntity = await _repository.Categoria.GetCategoriaAsync(id, trackChanges: false);
-                   
+
             if (categoriaEntity == null)
             {
                 _logger.LogInfo($"Categoria with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
-             _repository.Categoria.DeleteCategoria(categoriaEntity);
+            _repository.Categoria.DeleteCategoria(categoriaEntity);
             await _repository.SaveAsync();
             return NoContent();
         }

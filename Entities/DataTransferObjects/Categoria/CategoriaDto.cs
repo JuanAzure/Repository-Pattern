@@ -10,6 +10,6 @@ namespace Entities.DataTransferObjects
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public bool Condicion { get; set; }
-        public ICollection<ArticuloDto> articulos { get; set; }
+        public ICollection<ArticuloDto> Articulos { get; set; }
     }
 }

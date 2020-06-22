@@ -29,18 +29,16 @@ namespace PatterRepository
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddSingleton<ILoggerManager, LoggerManager>();
-
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.ConfigureLoggerService();
             services.ConfigureSqlServerContext(Configuration);
             services.ConfigureRepositoryWrapper();
-
             services.AddControllers(config =>
             {
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
-
-            }).AddXmlSerializerFormatters()
+            }).AddNewtonsoftJson()
+              .AddXmlDataContractSerializerFormatters()
             .AddCustomCSVFormatter();
 
             services.AddScoped<TemplateGenerator>();
