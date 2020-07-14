@@ -33,6 +33,8 @@ namespace PatterRepository
             services.ConfigureLoggerService();
             services.ConfigureSqlServerContext(Configuration);
             services.ConfigureRepositoryWrapper();
+            //services.ConfigureCors();
+
             services.AddControllers(config =>
             {
                 config.RespectBrowserAcceptHeader = true;
@@ -58,11 +60,8 @@ namespace PatterRepository
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCors("CorsPolicy");
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.All
-            });
+
+            app.ConfigureCor();
 
             //app.ConfigureExceptionHandler(logger);
             app.ConfigureCustomExceptionMiddleware();
