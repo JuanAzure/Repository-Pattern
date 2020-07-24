@@ -96,7 +96,7 @@ namespace PatterRepository.Controllers
 
             //var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.Id, trackChanges: false);
             var CategoriaToReturn = _mapper.Map<CategoriaDto>(categoriaEntity);
-            return CreatedAtRoute("CategoriaId", new { id = CategoriaToReturn.Id }, CategoriaToReturn);
+            return CreatedAtRoute("CategoriaId", new { id = CategoriaToReturn.categoriaId }, CategoriaToReturn);
         }
 
 
@@ -118,7 +118,7 @@ namespace PatterRepository.Controllers
             await _repository.SaveAsync();
             var categoriaCollectionToReturn =
            _mapper.Map<IEnumerable<CategoriaDto>>(categoriaEntities);
-            var ids = string.Join(",", categoriaCollectionToReturn.Select(c => c.Id));
+            var ids = string.Join(",", categoriaCollectionToReturn.Select(c => c.categoriaId));
             return CreatedAtRoute("CategoriaCollection", new { ids }, categoriaCollectionToReturn);
 
         }

@@ -12,6 +12,12 @@ namespace Contracts
         IArticuloRepository Articulo { get; }
         ICategoriaRepository Categoria { get; }
         IPersonaRepository Persona { get; }
+        IItemRepository Item { get; }
+        ICustomerRepository Customer { get; }
+        IOrderRepository Order { get; }
+
+        IOrderItemsRepository OrderItems { get; }
+
         Task SaveAsync();
     }
 }

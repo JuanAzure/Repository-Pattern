@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="OrderRepository .cs~RF586d3fb.TMP" />
+    <None Remove="OrderRepository .cs~RF59e0f01.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
   </ItemGroup>
 

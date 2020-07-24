@@ -17,6 +17,13 @@ namespace Repository
         private ICategoriaRepository _categoria;
         private IPersonaRepository _persona;
 
+        private IItemRepository _item;
+
+        private ICustomerRepository _customer;
+        private IOrderRepository _Order;
+        private IOrderItemsRepository _orderItems;
+
+
 
 
         public IOwnerRepository Owner
@@ -78,6 +85,57 @@ namespace Repository
                 return _persona;
             }
         }
+
+        public IItemRepository Item
+        {
+            get
+            {
+                if (_item == null)
+                {
+                    _item = new ItemRepository(_repoContext);
+                }
+                return _item;
+            }
+        }
+
+        public ICustomerRepository Customer
+        {
+            get
+            {
+                if (_customer == null)
+                {
+                    _customer = new CustomerRepository(_repoContext);
+                }
+                return _customer;
+            }
+        }
+
+        public IOrderRepository Order
+        {
+            get
+            {
+                if (_Order == null)
+                {
+                    _Order = new OrderRepository(_repoContext);
+                }
+                return _Order;
+            }
+        }
+
+
+        public IOrderItemsRepository OrderItems
+        {
+            get
+            {
+                if (_orderItems == null)
+                {
+                    _orderItems = new OrderItemsRepository(_repoContext);
+                }
+                return _orderItems;
+            }
+        }
+
+
 
 
         public RepositoryWrapper(RepositoryContext repoContext)=> _repoContext = repoContext;        

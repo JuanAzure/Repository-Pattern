@@ -14,5 +14,7 @@ namespace Entities.DataTransferObjects
         public string Descripcion { get; set; }
         public bool Condicion { get; set; }
         public string Categoria { get; set; }
+        public int categoriaId { get; set; }
+
     }
 }

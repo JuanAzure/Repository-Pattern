@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Entities.DataTransferObjects;
+using Entities.DataTransferObjects.Order;
 using Entities.Models;
 using System.Linq;
+
 namespace PatterRepository
 {
     public class MappingProfile : Profile
@@ -9,9 +11,28 @@ namespace PatterRepository
         public MappingProfile()
         {
 
+            CreateMap<Order, OrderDto>()
+                .ForMember(O => O.Customer, opt => opt.MapFrom(c => c.Customer.Name));
+
+            CreateMap<Order, GetOrdersDto>()
+            .ForMember(O => O.Customer, opt => opt.MapFrom(c => c.Customer.Name));
+
+
+            CreateMap<OrderForCreationDto, Order>();
+            CreateMap<OrderItemsForCreationDto, OrderItems>();
+
+            CreateMap<OrderItems, OrderItemsDto>()
+            .ForMember(i => i.Item, opt => opt.MapFrom(o => o.Item.Name))
+            .ForMember(p => p.Price, opt => opt.MapFrom(o => o.Item.Price))
+            .ForMember(t => t.Total, opt => opt.MapFrom(o => o.Quantity * o.Item.Price));
+
+
+
+
             CreateMap<AccountForCreationDto, Account>();
             CreateMap<Account, AccountDto>()
              .ForMember(c => c.Owner, opt => opt.MapFrom(x => x.owner.Name));
+
 
             CreateMap<Owner, OwnerDto>();
             CreateMap<OwnerForCreationDto, Owner>();
@@ -28,7 +49,8 @@ namespace PatterRepository
             #endregion
 
             #region Mapeo Objeto Categoria
-            CreateMap<Categoria, CategoriaDto>();
+            CreateMap<Categoria, CategoriaDto>()
+                .ForMember(x => x.categoriaId, opt => opt.MapFrom(c => c.Id));
             CreateMap<CategoriaForCreationDto, Categoria>();
 
             CreateMap<CategoriaForUpdateDto, Categoria>()
@@ -55,11 +77,12 @@ namespace PatterRepository
                            dirU.Condicion = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Condicion;
                        }
 
-                  });
-                       #endregion
+                   });
+            #endregion
 
-                   #region Mapeo Objeto Persona
-                       CreateMap<Persona, PersonaDto>();
+            #region Mapeo Objeto Persona
+            CreateMap<Persona, PersonaDto>()
+            .ForMember(x => x.personaId, opt => opt.MapFrom(p => p.Id));
             CreateMap<PersonaForCreationDto, Persona>();
             CreateMap<PersonaForUpdateDto, Persona>();
             #endregion

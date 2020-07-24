@@ -48,7 +48,7 @@ namespace PatterRepository.Utility
 
         private static void FormatCsv(StringBuilder buffer, CategoriaDto categoria)
         {
-            buffer.AppendLine($"{categoria.Id},\"{categoria.Nombre},\"{categoria.Descripcion}\"");
+            buffer.AppendLine($"{categoria.categoriaId},\"{categoria.Nombre},\"{categoria.Descripcion}\"");
         }
     }
 }

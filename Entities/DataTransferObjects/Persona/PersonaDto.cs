@@ -6,7 +6,7 @@ namespace Entities.DataTransferObjects
 {
    public class PersonaDto
     {
-        public int Id { get; set; }
+        public int personaId { get; set; }
         public string TipoPersona { get; set; }        
         public string Nombre { get; set; }
         public string TipoDocumento { get; set; }

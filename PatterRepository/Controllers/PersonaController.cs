@@ -91,7 +91,7 @@ namespace PatterRepository.Controllers
 
             //var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.Id, trackChanges: false);
             var PersonaToReturn = _mapper.Map<PersonaDto>(personaEntity);
-            return CreatedAtRoute("PersonaId", new { id = PersonaToReturn.Id }, PersonaToReturn);
+            return CreatedAtRoute("PersonaId", new { id = PersonaToReturn.personaId }, PersonaToReturn);
         }
         
         [HttpPut("{id}")]
