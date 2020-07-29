@@ -11,5 +11,6 @@ namespace Contracts
         Task<IEnumerable<Order>> GetAllOrderAsync(bool trackChanges);
         Task<Order> GetByOrderIDAsync(long OrderID, bool trackChanges);
         void CreateOrder(Order order );
+        void DeleteOrder(Order order);
     }
 }

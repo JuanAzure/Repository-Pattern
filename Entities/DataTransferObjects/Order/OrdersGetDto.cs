@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Entities.DataTransferObjects.Order
 {
-    public class GetOrdersDto
+    public class OrdersGetDto
     {
         public long OrderID { get; set; }
         public string OrderNo { get; set; }

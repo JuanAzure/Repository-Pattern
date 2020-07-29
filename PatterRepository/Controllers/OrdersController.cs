@@ -42,7 +42,7 @@ namespace PatterRepository.Controllers
                 return NotFound();
             }
 
-            var orders = _mapper.Map<IEnumerable<GetOrdersDto>>(getorders);
+            var orders = _mapper.Map<IEnumerable<OrdersGetDto>>(getorders);
 
             //_logger.LogInfo($"Returning {OrderDto.} Categoria.");
             _logger.LogInfo($"El objecto orders no contiene datos. {orders.Count()}");
@@ -79,6 +79,46 @@ namespace PatterRepository.Controllers
             await _repository.SaveAsync();
 
             return Ok(new { order });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder(int id, [FromBody] OrderForUpdateDto orderForUpdate)
+        {
+            if (orderForUpdate == null)
+            {
+                _logger.LogError("CategoriaForUpdateDto object sent from client is null.");
+                return BadRequest("CategoriaForUpdateDto object is null");
+            }
+
+            var orderEntity = await _repository.Order.GetByOrderIDAsync(id, trackChanges: true);
+            if (orderEntity == null)
+            {
+                _logger.LogInfo($"Categoria with id: {id} doesn't exist in the database.");
+
+                return NotFound();
+            }
+
+            _mapper.Map(orderForUpdate, orderEntity);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
+  
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var orderEntity = await _repository.Order.GetByOrderIDAsync(id, trackChanges: false);
+
+            if (orderEntity == null)
+            {
+                _logger.LogInfo($"Order with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.Order.DeleteOrder(orderEntity);
+            await _repository.SaveAsync();
+            return NoContent();
         }
     }
 }
