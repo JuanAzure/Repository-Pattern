@@ -18,6 +18,9 @@ namespace Contracts
 
         IOrderItemsRepository OrderItems { get; }
 
+        IVentaRepository Venta { get; }
+
+
         Task SaveAsync();
     }
 }

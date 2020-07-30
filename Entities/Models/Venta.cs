@@ -10,11 +10,10 @@ namespace Entities.Models
     public class Venta
     {
         
-        [Key]
-        [Column("VentaId")]
-        public int Id { get; set; }
+        [Key]        
+        public int VentaId { get; set; }
         [Required]
-        public int ClienteId { get; set; }
+        public int PersonaId { get; set; }
         [Required]
         public int UsuarioId { get; set; }
         [Required]
@@ -30,7 +29,7 @@ namespace Entities.Models
         public decimal Total { get; set; }
         [Required]
         public string Estado { get; set; }
-        public ICollection<DetalleVenta> Detalles { get; set; }        
+        public ICollection<DetalleVenta> DetalleVenta{ get; set; }        
         public Persona Persona { get; set; }
     }
 }

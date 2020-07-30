@@ -23,6 +23,7 @@ namespace Repository
         private IOrderRepository _Order;
         private IOrderItemsRepository _orderItems;
 
+        private IVentaRepository _Venta;
 
 
 
@@ -135,6 +136,20 @@ namespace Repository
             }
         }
 
+
+
+
+        public IVentaRepository Venta
+        {
+            get
+            {
+                if (_Venta == null)
+                {
+                    _Venta = new VentaRepository(_repoContext);
+                }
+                return _Venta;
+            }
+        }
 
 
 

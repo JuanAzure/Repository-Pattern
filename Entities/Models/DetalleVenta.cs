@@ -9,10 +9,10 @@ namespace Entities.Models
     [Table("DetalleVenta")]
     public  class DetalleVenta
     {
-        [Key]
-        [Column("DetalleVentaId")]
-        public int Id { get; set; }
-        [Required]
+        [Key]        
+        public int DetalleVentaId { get; set; }
+
+        [ForeignKey(nameof(Venta))]
         public int VentaId { get; set; }
         [Required]
         public int ArticuloId { get; set; }

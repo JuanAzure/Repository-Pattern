@@ -6,8 +6,7 @@ namespace Entities.DataTransferObjects
 {
     public class VentaDto
     {
-        public class Venta
-        {
+
             public int Id { get; set; }
             public string Cliente { get; set; }
             public string TipoPersona { get; set; }
@@ -19,8 +18,6 @@ namespace Entities.DataTransferObjects
             public decimal Impuesto { get; set; }            
             public decimal Total { get; set; }            
             public string Estado { get; set; }
-            //public ICollection<DetalleVenta> detalles { get; set; }            
-        }
-
+            //public ICollection<DetalleVenta> detalles { get; set; }                   
     }
 }
