@@ -22,7 +22,7 @@ namespace Entities.Models
         public decimal Precio { get; set; }
         [Required]
         public decimal Descuento { get; set; }
-        public Venta Venta { get; set; }
-        public Articulo Articulo { get; set; }
+        public virtual Venta Venta { get; set; }
+        public virtual Articulo Articulo { get; set; }
     }
 }

@@ -7,6 +7,8 @@ namespace Entities.DataTransferObjects.Venta
    public class VentasGetDto
     {
         public int Id { get; set; }
+
+        public int IdCliente { get; set; }
         public string Cliente { get; set; }                
         public string TipoComprobante { get; set; }
         public string SerieComprobante { get; set; }

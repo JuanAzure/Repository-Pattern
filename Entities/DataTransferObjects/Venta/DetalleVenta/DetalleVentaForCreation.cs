@@ -7,7 +7,7 @@ namespace Entities.DataTransferObjects.Venta.DetalleVenta
    public class DetalleVentaForCreation
     {
                 
-        public int VentaId { get; set; }    
+        //public int VentaId { get; set; }    
         public int ArticuloId { get; set; }        
         public int Cantidad { get; set; }        
         public decimal Precio { get; set; }        

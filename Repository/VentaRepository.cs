@@ -13,19 +13,24 @@ namespace Repository
 
         public VentaRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public async Task<IEnumerable<Venta>> GetAllVentaAsync(bool trackChanges) =>
 
-        await FindAll(trackChanges)
-            .Include(c => c.Persona)
-            .Include(o => o.DetalleVenta)
-            .OrderByDescending(o => o.Total)
-            .ToListAsync();
 
-        public async Task<Venta> GetByVentaIDAsync(int ventaId, bool trackChanges) =>
-              await FindByCondition(or => or.VentaId.Equals(ventaId), trackChanges)
-                  .Include(c => c.Persona)
-                 .Include(o => o.DetalleVenta).ThenInclude(x => x.Articulo)
-                .FirstOrDefaultAsync();
+        public async Task<IEnumerable<Venta>> GetAllVentaAsync(bool trackChanges) =>            
+           await FindAll(trackChanges)
+                .Include(p=>p.Persona)
+                .ToListAsync();
+
+
+        public async Task<Venta> GetByVentaDetailsAsync(int ventaId,bool trackChanges) =>
+             await FindByCondition(v=>v.VentaId.Equals(ventaId),trackChanges)            
+            .Include(det=>det.DetalleVentas).ThenInclude(art=>art.Articulo)
+            .Include(per=>per.Persona)
+            .FirstOrDefaultAsync();
+
+        public async Task<Venta> GetVentaByIdAsync(int ventaId, bool trackChanges) =>
+            await FindByCondition(v => v.VentaId.Equals(ventaId), trackChanges)
+            .SingleOrDefaultAsync();
+
 
         public void CreateVenta(Venta venta) => Create(venta);
 

@@ -6,7 +6,7 @@ namespace Entities.DataTransferObjects
 {
     public class ArticuloDto
    {      
-        public int Id { get; set; }        
+        public int articuloId { get; set; }        
         public string Codigo { get; set; }
         public string Nombre { get; set; }
         public decimal PrecioVenta { get; set; }

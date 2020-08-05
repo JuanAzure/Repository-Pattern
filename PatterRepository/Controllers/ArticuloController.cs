@@ -81,22 +81,32 @@ namespace PatterRepository.Controllers
             _repository.Articulo.CreateArticulo(categoriaId, articuloEntity);
             await _repository.SaveAsync();
 
-            var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.Id, trackChanges: false);
+            var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.ArticuloId, trackChanges: false);
             var ArticuloToReturn = _mapper.Map<ArticuloDto>(articuloCategoria);
-            return CreatedAtRoute("ArticuloId", new { id = ArticuloToReturn.Id }, ArticuloToReturn);
+            return CreatedAtRoute("ArticuloId", new { id = ArticuloToReturn.articuloId }, ArticuloToReturn);
         }
 
         [Route("{id}/categorias/{categoriaId}")]
         [HttpDelete]
         public async Task<IActionResult> DeleteArticuloForCategoria(int categoriaId, int id)
         {
+
+            var detalleArticulo = await _repository.DetalleVenta.GetExistsArticuloDetallesAsync(id, trackChanges: false);
+
+            if  (detalleArticulo.Count() > 0 )
+            {
+                _logger.LogInfo($"El producto con id: {id} existe dentro de los detalles de ventas en la database.");
+                return BadRequest($"El producto con id: {id} existe dentro de los detalles de ventas en la database.");
+            }
+
             var categoria = await _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
             if (categoria == null)
             {
                 _logger.LogInfo($"Categoria with id: {categoriaId} doesn't exist in the  database.");
-
                 return NotFound();
             }
+            
+
             var ArticuloForCategoria = await _repository.Articulo.GetArticuloCategoriaAsync(categoriaId, id, trackChanges: false);
 
             if (ArticuloForCategoria == null)

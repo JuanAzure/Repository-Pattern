@@ -9,7 +9,7 @@ namespace Entities.Models
     {
         [Key]
         [Column("ArticuloId")]
-        public int Id { get; set; }
+        public int ArticuloId { get; set; }
 
         [Required(ErrorMessage = "Codigo is requerid")]
         [StringLength(100, ErrorMessage = "Codigo can`t be than 100 characters")]

@@ -20,12 +20,12 @@ namespace Repository
 
         public async Task<Articulo> GetArticuloAsync(int articuloId, bool trackChanges)=>
 
-           await FindByCondition(c => c.Id.Equals(articuloId), trackChanges)
+           await FindByCondition(c => c.ArticuloId.Equals(articuloId), trackChanges)
             .Include(c=>c.Categoria)
             .SingleOrDefaultAsync();
 
         public async Task<IEnumerable<Articulo>> GetByIdsAsync(IEnumerable<int> ids, bool trackChanges)=>        
-        await FindByCondition(x => ids.Contains(x.Id), trackChanges).ToListAsync();
+        await FindByCondition(x => ids.Contains(x.ArticuloId), trackChanges).ToListAsync();
         public void CreateArticulo(int categoriaId, Articulo articulo)
         {
             articulo.CategoriaId = categoriaId;
@@ -34,6 +34,6 @@ namespace Repository
         public void DeleteArticulo(Articulo articulo) => Delete(articulo);
 
         public async Task<Articulo> GetArticuloCategoriaAsync(int categoriaId, int id, bool trackChanges)=>
-            await FindByCondition(e => e.CategoriaId.Equals(categoriaId) && e.Id.Equals(id), trackChanges).SingleOrDefaultAsync();
+            await FindByCondition(e => e.CategoriaId.Equals(categoriaId) && e.ArticuloId.Equals(id), trackChanges).SingleOrDefaultAsync();
     }
 }

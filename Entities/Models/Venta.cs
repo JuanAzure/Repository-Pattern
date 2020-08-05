@@ -29,7 +29,7 @@ namespace Entities.Models
         public decimal Total { get; set; }
         [Required]
         public string Estado { get; set; }
-        public ICollection<DetalleVenta> DetalleVenta{ get; set; }        
+        public ICollection<DetalleVenta> DetalleVentas{ get; set; }        
         public Persona Persona { get; set; }
     }
 }

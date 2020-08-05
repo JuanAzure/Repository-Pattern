@@ -19,7 +19,7 @@ namespace Contracts
         IOrderItemsRepository OrderItems { get; }
 
         IVentaRepository Venta { get; }
-
+        IDetalleVentaRepository DetalleVenta { get; }
 
         Task SaveAsync();
     }

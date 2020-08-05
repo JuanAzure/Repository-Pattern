@@ -8,8 +8,8 @@ namespace Entities.Models
     public class Categoria
     {
         [Key]
-        [Column("CategoriaId")]
-        public int Id { get; set; }
+        
+        public int CategoriaId { get; set; }
 
         [Required(ErrorMessage = "Nombre is requerid")]
         [StringLength(100, ErrorMessage = "Descripcion can`t be than 100 characters")]

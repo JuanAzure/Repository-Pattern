@@ -25,6 +25,7 @@ namespace Repository
 
         private IVentaRepository _Venta;
 
+        private IDetalleVentaRepository _DetalleVenta;
 
 
         public IOwnerRepository Owner
@@ -151,6 +152,18 @@ namespace Repository
             }
         }
 
+
+        public IDetalleVentaRepository DetalleVenta
+        {
+            get
+            {
+                if (_DetalleVenta == null)
+                {
+                    _DetalleVenta = new DetalleVentaRepository(_repoContext);
+                }
+                return _DetalleVenta;
+            }
+        }
 
 
         public RepositoryWrapper(RepositoryContext repoContext)=> _repoContext = repoContext;        

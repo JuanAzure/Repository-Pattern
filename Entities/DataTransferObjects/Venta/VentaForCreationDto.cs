@@ -16,7 +16,7 @@ namespace Entities.DataTransferObjects
             public decimal Impuesto { get; set; }            
             public decimal Total { get; set; }
             public string Estado { get; set; } = "Confirmado";
-           public IEnumerable<DetalleVentaForCreation> detalleVenta { get; set; }
+           public IEnumerable<DetalleVentaForCreation> detalleVentas { get; set; }
 
     }
 }

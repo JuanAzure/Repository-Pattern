@@ -61,7 +61,7 @@ namespace PatterRepository
                     var itemsUpdate = orderDB.OrderItems.Where(item => orderIds.Contains(item.OrderItemID) && item.OrderItemID > 0).ToList();
                     foreach (var itemU in itemsUpdate)
                     {
-                        itemU.OrderItemID = orderUpdate.orderItems.Where(i => i.OrderItemID == itemU.OrderItemID).First().OrderItemID;
+                        itemU.OrderItemID = orderUpdate.orderItems.Where(i => i.OrderItemID ==itemU.OrderItemID).First().OrderItemID;
                         itemU.OrderID = orderUpdate.orderItems.Where(i => i.OrderID == itemU.OrderID).First().OrderID;
                         itemU.ItemID = orderUpdate.orderItems.Where(i => i.OrderItemID == itemU.OrderItemID).First().ItemID;
                         itemU.Quantity = orderUpdate.orderItems.Where(i => i.OrderItemID == itemU.OrderItemID).First().Quantity;
@@ -84,35 +84,35 @@ namespace PatterRepository
             #region Mapeo Objeto Categoria
 
             CreateMap<Categoria, CategoriaDto>()
-                .ForMember(x => x.categoriaId, opt => opt.MapFrom(c => c.Id));
+                .ForMember(x => x.categoriaId, opt => opt.MapFrom(c => c.CategoriaId));
             CreateMap<CategoriaForCreationDto, Categoria>();
 
-            CreateMap<CategoriaForUpdateDto, Categoria>()
-                .ForMember(ca => ca.Articulos, opt => opt.Ignore())
+            CreateMap<CategoriaForUpdateDto, Categoria>();
+                //.ForMember(ca => ca.Articulos, opt => opt.Ignore())
 
-                   .AfterMap((clienteCRUD, clienteDB) =>
-                   {
-                       var ids = clienteCRUD.Articulos.Select(dir => dir.ArticuloId).ToList();
+                //   .AfterMap((clienteCRUD, clienteDB) =>
+                //   {
+                //       var ids = clienteCRUD.Articulos.Select(dir => dir.ArticuloId).ToList();
 
-                       // update
-                       var articulosActualizar = clienteDB.Articulos.Where(dir => ids.Contains(dir.Id) && dir.Id > 0).ToList();
-                       foreach (var dirU in articulosActualizar)
-                       {
-                           dirU.CategoriaId = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().CategoriaId;
-                           dirU.Codigo = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Codigo;
-                           dirU.Nombre = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Nombre;
-                           dirU.PrecioVenta = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().PrecioVenta;
-                           dirU.Stock = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Stock;
-                           dirU.Descripcion = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Descripcion;
-                           dirU.Condicion = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Condicion;
-                       }
+                //       // update
+                //       var articulosActualizar = clienteDB.Articulos.Where(dir => ids.Contains(dir.Id) && dir.Id > 0).ToList();
+                //       foreach (var dirU in articulosActualizar)
+                //       {
+                //           dirU.CategoriaId = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().CategoriaId;
+                //           dirU.Codigo = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Codigo;
+                //           dirU.Nombre = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Nombre;
+                //           dirU.PrecioVenta = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().PrecioVenta;
+                //           dirU.Stock = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Stock;
+                //           dirU.Descripcion = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Descripcion;
+                //           dirU.Condicion = clienteCRUD.Articulos.Where(cat => cat.ArticuloId == dirU.Id).First().Condicion;
+                //       }
 
-                       // delete - ids = Array [1,3,5]
-                       var articulosBorrar = clienteDB.Articulos.Where(dir => !ids.Contains(dir.Id)).ToList();
-                       foreach (var artB in articulosBorrar)
-                           clienteDB.Articulos.Remove(artB);
+                //       // delete - ids = Array [1,3,5]
+                //       var articulosBorrar = clienteDB.Articulos.Where(dir => !ids.Contains(dir.Id)).ToList();
+                //       foreach (var artB in articulosBorrar)
+                //           clienteDB.Articulos.Remove(artB);
 
-                   });
+                //   });
             #endregion
 
             #region Mapeo Objeto Persona
