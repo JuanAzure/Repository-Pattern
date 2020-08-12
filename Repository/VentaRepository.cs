@@ -13,13 +13,10 @@ namespace Repository
 
         public VentaRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-
-
         public async Task<IEnumerable<Venta>> GetAllVentaAsync(bool trackChanges) =>            
            await FindAll(trackChanges)
                 .Include(p=>p.Persona)
                 .ToListAsync();
-
 
         public async Task<Venta> GetByVentaDetailsAsync(int ventaId,bool trackChanges) =>
              await FindByCondition(v=>v.VentaId.Equals(ventaId),trackChanges)            

@@ -18,19 +18,17 @@ namespace PatterRepository.AutoMapper
 
 
             //GET: Ventas 
-            
+
             //Se obtiene unicamente todas las ventas(Maestro ventas).
 
             CreateMap<Venta, VentasGetDto>()
-            .ForMember(c => c.Id, opt => opt.MapFrom(v => v.VentaId))
+            .ForMember(c => c.VentaId, opt => opt.MapFrom(v => v.VentaId))
             .ForMember(c => c.IdCliente, opt => opt.MapFrom(p => p.Persona.Id))
             .ForMember(c => c.Cliente, opt => opt.MapFrom(c => string.Join(' ', c.Persona.Nombre, ", ", c.Persona.TipoDocumento, ": ", c.Persona.NumDocumento, ", Email: ", c.Persona.Email)));
 
-
-
             CreateMap<Venta, VentaDto>();
-
-            CreateMap<DetalleVenta, DetalleVentaDto>();
+            CreateMap<DetalleVenta, DetalleVentaDto>()
+                .ForMember(p => p.Articulo, opt => opt.MapFrom(p => p.Articulo.Nombre));
 
             //.ForMember(c => c.Id, opt => opt.MapFrom(v => v.VentaId))
             //.ForMember(c => c.IdCliente, opt => opt.MapFrom(p => p.Persona.Id))

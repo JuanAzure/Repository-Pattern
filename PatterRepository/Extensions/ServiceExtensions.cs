@@ -54,7 +54,7 @@ namespace PatterRepository.Extensions
         public static IApplicationBuilder ConfigureCor(this IApplicationBuilder app)
         {
             app.UseCors(builder =>
-             builder.WithOrigins("http://localhost:4200")
+             builder.WithOrigins("http://localhost:4200", "http://localhost:4201")
              .AllowAnyHeader()
               .AllowAnyMethod());
             return app;

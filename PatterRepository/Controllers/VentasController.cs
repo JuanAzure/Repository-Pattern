@@ -45,7 +45,9 @@ namespace PatterRepository.Controllers
             var ventas = _mapper.Map<IEnumerable<VentasGetDto>>(getventas);
 
             _logger.LogInfo($"El objecto ventas no contiene datos. {ventas.Count()}");
-            return Ok(new { ventas });
+             return Ok(new { ventas });
+
+ //           return Ok(ventas);
         }
 
 

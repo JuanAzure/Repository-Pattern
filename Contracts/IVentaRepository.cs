@@ -11,8 +11,6 @@ namespace Contracts
 
         Task<Venta> GetVentaByIdAsync(int ventaId, bool trackChanges);
 
-
-
         void CreateVenta(Venta order );
         void DeleteVenta(Venta order);
     }

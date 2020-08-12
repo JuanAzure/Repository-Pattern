@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Contracts;
-using Entities.DataTransferObjects;
-using Entities.DataTransferObjects.Venta;
 using Entities.DataTransferObjects.Venta.DetalleVenta;
-using Entities.Models;
 using LoggerService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PatterRepository.Controllers

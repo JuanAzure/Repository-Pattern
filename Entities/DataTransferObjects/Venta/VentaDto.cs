@@ -8,7 +8,7 @@ namespace Entities.DataTransferObjects
     public class VentaDto
     {
 
-        public int Id { get; set; }
+        public int VentaId { get; set; }
         public int PersonaId { get; set; }
         public string Cliente { get; set; }
         public string TipoComprobante { get; set; }
