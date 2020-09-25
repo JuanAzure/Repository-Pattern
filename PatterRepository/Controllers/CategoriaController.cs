@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,6 +8,7 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using LoggerService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PatterRepository.ModelBinders;
 
 namespace PatterRepository.Controllers
@@ -92,9 +94,21 @@ namespace PatterRepository.Controllers
             var categoriaEntity = _mapper.Map<Categoria>(_categoria);
 
             _repository.Categoria.CreateCategoria(categoriaEntity);
-            await _repository.SaveAsync();
 
-            //var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.Id, trackChanges: false);
+            try
+            {
+                await _repository.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                var error = e.InnerException.Message;
+                if (error.Contains("Infracción de la restricción UNIQUE KEY"))
+                {
+                    _logger.LogError(error);
+                    return BadRequest(error.Replace("Se terminó la instrucción.", ""));
+                }
+            }
+
             var CategoriaToReturn = _mapper.Map<CategoriaDto>(categoriaEntity);
             return CreatedAtRoute("CategoriaId", new { id = CategoriaToReturn.categoriaId }, CategoriaToReturn);
         }
@@ -137,12 +151,24 @@ namespace PatterRepository.Controllers
             if (categoriaEntity == null)
             {
                 _logger.LogInfo($"Categoria with id: {id} doesn't exist in the database.");
-
                 return NotFound();
+            }
+            _mapper.Map(_categoria, categoriaEntity);
+
+            try
+            {
+                await _repository.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                var error = e.InnerException.Message;
+                if (error.Contains("Infracción de la restricción UNIQUE KEY"))
+                {
+                    _logger.LogError(error);
+                    return BadRequest (error.Replace("Se terminó la instrucción.",""));   
+                }                
             } 
             
-            _mapper.Map(_categoria, categoriaEntity);
-            await _repository.SaveAsync();
             return NoContent();
         }
 

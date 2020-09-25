@@ -9,6 +9,7 @@ using Entities.Models;
 using LoggerService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace PatterRepository.Controllers
 {
@@ -79,7 +80,19 @@ namespace PatterRepository.Controllers
             var articuloEntity = _mapper.Map<Articulo>(articulo);
 
             _repository.Articulo.CreateArticulo(categoriaId, articuloEntity);
-            await _repository.SaveAsync();
+            try
+            {
+                await _repository.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                var error = e.InnerException.Message;
+                if (error.Contains("Infracción de la restricción UNIQUE KEY"))
+                {
+                    _logger.LogError(error);
+                    return BadRequest(error.Replace("Se terminó la instrucción.", ""));
+                }
+            }
 
             var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.ArticuloId, trackChanges: false);
             var ArticuloToReturn = _mapper.Map<ArticuloDto>(articuloCategoria);
@@ -96,7 +109,7 @@ namespace PatterRepository.Controllers
             if  (detalleArticulo.Count() > 0 )
             {
                 _logger.LogInfo($"El producto con id: {id} existe dentro de los detalles de ventas en la database.");
-                return BadRequest($"El producto con id: {id} existe dentro de los detalles de ventas en la database.");
+                return BadRequest($"El producto con id: {id} existe dentro de los detalles de ventas en la base de datos.");
             }
 
             var categoria = await _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
@@ -145,7 +158,20 @@ namespace PatterRepository.Controllers
                 return NotFound();
             }
             _mapper.Map(articulo, articuloEntity);
-            await _repository.SaveAsync();
+
+            try
+            {
+                await _repository.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                var error = e.InnerException.Message;
+                if (error.Contains("Infracción de la restricción UNIQUE KEY"))
+                {
+                    _logger.LogError(error);
+                    return BadRequest(error.Replace("Se terminó la instrucción.", ""));
+                }
+            }
             return NoContent();
         }
     }

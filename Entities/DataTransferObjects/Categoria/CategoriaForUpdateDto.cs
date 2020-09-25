@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace Entities.DataTransferObjects
 {
    public class CategoriaForUpdateDto
@@ -9,6 +6,6 @@ namespace Entities.DataTransferObjects
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public bool Condicion { get; set; }
-        public IEnumerable<ArticuloForUpdateDto> Articulos { get; set; }        
+        //public IEnumerable<ArticuloForUpdateDto> Articulos { get; set; }        
     }
 }

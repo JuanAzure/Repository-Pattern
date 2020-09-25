@@ -4,14 +4,11 @@ using DinkToPdf.Contracts;
 using LoggerService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NLog;
 using PatterRepository.Extensions;
 using PatterRepository.Utility;
-using System.IO;
 
 namespace PatterRepository
 {
@@ -19,7 +16,7 @@ namespace PatterRepository
     {
         public Startup(IConfiguration configuration)
         {
-            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+            ///LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -40,7 +37,7 @@ namespace PatterRepository
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
             }).AddNewtonsoftJson()
-              .AddXmlDataContractSerializerFormatters()
+              ///.AddXmlDataContractSerializerFormatters()
             .AddCustomCSVFormatter();
 
             services.AddScoped<TemplateGenerator>();

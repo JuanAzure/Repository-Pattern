@@ -10,6 +10,7 @@ using LoggerService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace PatterRepository.Controllers
 {
@@ -87,9 +88,20 @@ namespace PatterRepository.Controllers
             var personaEntity = _mapper.Map<Persona>(_persona);
 
             _repository.Persona.CreatePersona(personaEntity);
-            await _repository.SaveAsync();
+            try
+            {
+                await _repository.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                var error = e.InnerException.Message;
+                if (error.Contains("Infracción de la restricción UNIQUE KEY"))
+                {
+                    _logger.LogError(error);
+                    return BadRequest(error.Replace("Se terminó la instrucción.", ""));
+                }
+            }
 
-            //var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.Id, trackChanges: false);
             var PersonaToReturn = _mapper.Map<PersonaDto>(personaEntity);
             return CreatedAtRoute("PersonaId", new { id = PersonaToReturn.personaId }, PersonaToReturn);
         }
@@ -111,7 +123,20 @@ namespace PatterRepository.Controllers
                 return NotFound();
             }   
             _mapper.Map(persona, personaEntity);
-            await _repository.SaveAsync();
+            try
+            {
+                await _repository.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                var error = e.InnerException.Message;
+                if (error.Contains("Infracción de la restricción UNIQUE KEY"))
+                {
+                    _logger.LogError(error);
+                    return BadRequest(error.Replace("Se terminó la instrucción.", ""));
+                }
+            }
+            
             return NoContent();
         }
 

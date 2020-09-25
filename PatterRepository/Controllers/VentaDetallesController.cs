@@ -27,8 +27,6 @@ namespace PatterRepository.Controllers
         }
         #endregion
 
-
-
         [HttpGet("{id:int}")]       
          public async Task<ActionResult> GetVentaDetalles(int id)
         {

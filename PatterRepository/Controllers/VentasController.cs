@@ -43,12 +43,13 @@ namespace PatterRepository.Controllers
             }
 
             var ventas = _mapper.Map<IEnumerable<VentasGetDto>>(getventas);
+            _logger.LogInfo($"El objecto ventas cantidad de registos {ventas.Count()}");
 
-            _logger.LogInfo($"El objecto ventas no contiene datos. {ventas.Count()}");
              return Ok(new { ventas });
 
  //           return Ok(ventas);
         }
+
 
 
         [HttpGet("{id:int}")]       
@@ -71,10 +72,16 @@ namespace PatterRepository.Controllers
         {
             if (venta == null)
             {
-                _logger.LogError("OrderForCreationDto object sent from client is null.");
+                _logger.LogError("VentaForCreationDto object sent from client is null.");
                 return BadRequest("OrderForCreationDto object is null");
             }
 
+
+            if (venta.detalleVentas==null)
+            {
+                _logger.LogError("La venta no contiene detalles");
+                return BadRequest($"La venta no contien detalles");
+            }
             var ventaEntity = _mapper.Map<Venta>(venta);
 
             _repository.Venta.CreateVenta(ventaEntity);

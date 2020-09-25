@@ -28,7 +28,10 @@ namespace PatterRepository.AutoMapper
 
             CreateMap<Venta, VentaDto>();
             CreateMap<DetalleVenta, DetalleVentaDto>()
-                .ForMember(p => p.Articulo, opt => opt.MapFrom(p => p.Articulo.Nombre));
+                .ForMember(p => p.Articulo, opt => opt.MapFrom(p => p.Articulo.Nombre))
+                .ForMember(st => st.Total, opt => opt.MapFrom(c => c.Cantidad * c.Articulo.PrecioVenta));
+
+                // .ForMember(t => t.Total, opt => opt.MapFrom(o => o.Quantity * o.Item.Price));
 
             //.ForMember(c => c.Id, opt => opt.MapFrom(v => v.VentaId))
             //.ForMember(c => c.IdCliente, opt => opt.MapFrom(p => p.Persona.Id))
