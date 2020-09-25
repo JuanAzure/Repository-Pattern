@@ -38,7 +38,7 @@ namespace PatterRepository.Extensions
 
         public static void ConfigureSqlServerContext(this IServiceCollection services, IConfiguration config)
         {
-            var connectionString = config["ConnectionStrings:local"];
+            var connectionString = config["ConnectionStrings:docker"];
             services.AddDbContext<RepositoryContext>
                 (o => o.UseSqlServer(connectionString));
         }
