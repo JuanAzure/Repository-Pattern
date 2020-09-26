@@ -25,8 +25,10 @@ namespace Repository
             .FirstOrDefaultAsync();
 
         public async Task<Venta> GetVentaByIdAsync(int ventaId, bool trackChanges) =>
-            await FindByCondition(v => v.VentaId.Equals(ventaId), trackChanges)
-            .SingleOrDefaultAsync();
+           await FindByCondition(v => v.VentaId.Equals(ventaId), trackChanges)
+            .Include(det => det.DetalleVentas).ThenInclude(art => art.Articulo)
+            .Include(per => per.Persona)
+            .FirstOrDefaultAsync();
 
 
         public void CreateVenta(Venta venta) => Create(venta);

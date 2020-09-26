@@ -94,12 +94,10 @@ namespace PatterRepository.Controllers
             }
             catch (DbUpdateException e)
             {
-                var error = e.InnerException.Message;
-                if (error.Contains("Infracción de la restricción UNIQUE KEY"))
-                {
+                var error = e.InnerException.Message;                
+                if (error.Contains("UNIQUE KEY"))
                     _logger.LogError(error);
-                    return BadRequest(error.Replace("Se terminó la instrucción.", ""));
-                }
+                return BadRequest("No se puede insertar una clave duplicada en el  :" + personaEntity.NumDocumento);
             }
 
             var PersonaToReturn = _mapper.Map<PersonaDto>(personaEntity);
@@ -130,11 +128,9 @@ namespace PatterRepository.Controllers
             catch (DbUpdateException e)
             {
                 var error = e.InnerException.Message;
-                if (error.Contains("Infracción de la restricción UNIQUE KEY"))
-                {
+                if (error.Contains("UNIQUE KEY"))
                     _logger.LogError(error);
-                    return BadRequest(error.Replace("Se terminó la instrucción.", ""));
-                }
+                return BadRequest("No se puede insertar una clave duplicada en el  :" + personaEntity.NumDocumento);
             }
             
             return NoContent();

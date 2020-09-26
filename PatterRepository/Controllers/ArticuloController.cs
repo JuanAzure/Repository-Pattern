@@ -87,11 +87,9 @@ namespace PatterRepository.Controllers
             catch (DbUpdateException e)
             {
                 var error = e.InnerException.Message;
-                if (error.Contains("Infracción de la restricción UNIQUE KEY"))
-                {
+                if (error.Contains("UNIQUE KEY"))              
                     _logger.LogError(error);
-                    return BadRequest(error.Replace("Se terminó la instrucción.", ""));
-                }
+                return BadRequest("No se puede insertar una clave duplicada en el Nombre :"+ articuloEntity.Nombre);
             }
 
             var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.ArticuloId, trackChanges: false);
@@ -165,12 +163,11 @@ namespace PatterRepository.Controllers
             }
             catch (DbUpdateException e)
             {
+
                 var error = e.InnerException.Message;
-                if (error.Contains("Infracción de la restricción UNIQUE KEY"))
-                {
+                if (error.Contains("UNIQUE KEY"))
                     _logger.LogError(error);
-                    return BadRequest(error.Replace("Se terminó la instrucción.", ""));
-                }
+                return BadRequest("No se puede insertar una clave duplicada en el Nombre :" + articuloEntity.Nombre);
             }
             return NoContent();
         }
