@@ -23,20 +23,20 @@ namespace PatterRepository.AutoMapper
 
             CreateMap<Venta, VentasGetDto>()
             .ForMember(c => c.VentaId, opt => opt.MapFrom(v => v.VentaId))
-            .ForMember(c => c.personaId, opt => opt.MapFrom(p => p.Persona.Id))
+            .ForMember(c => c.PersonaId, opt => opt.MapFrom(p => p.Persona.Id))
             .ForMember(c => c.Cliente, opt => opt.MapFrom(c => string.Join(' ', c.Persona.Nombre)));
 
             CreateMap<Venta, VentaDto>();
             CreateMap<DetalleVenta, DetalleVentaDto>()
-                .ForMember(p => p.Articulo, opt => opt.MapFrom(p => p.Articulo.Nombre))
-                .ForMember(st => st.Total, opt => opt.MapFrom(c => c.Cantidad * c.Articulo.PrecioVenta));
+                .ForMember(p => p.Nombre, opt => opt.MapFrom(p => p.Articulo.Nombre))
+                .ForMember(p => p.PrecioVenta, opt => opt.MapFrom(p => p.Precio))
+                .ForMember(st => st.Total, opt => opt.MapFrom(c => c.Cantidad * c.Precio));
 
-                // .ForMember(t => t.Total, opt => opt.MapFrom(o => o.Quantity * o.Item.Price));
+            // .ForMember(t => t.Total, opt => opt.MapFrom(o => o.Quantity * o.Item.Price));
 
             //.ForMember(c => c.Id, opt => opt.MapFrom(v => v.VentaId))
             //.ForMember(c => c.IdCliente, opt => opt.MapFrom(p => p.Persona.Id))
-            //.ForMember(c => c.Cliente, opt => opt.MapFrom(c => string.Join(' ', c.Persona.Nombre, ", ", c.Persona.TipoDocumento, ": ", c.Persona.NumDocumento, ", Email: ", c.Persona.Email)));
-
+            //.ForMember(c => c.Cliente, opt => opt.MapFrom(c => string.Join(' ', c.Persona.Nombre, ", ", c.Persona.TipoDocumento, ": ", c.Persona.NumDocumento, ", Email: ", c.Persona.Email)));            
             #endregion
 
 
@@ -46,10 +46,7 @@ namespace PatterRepository.AutoMapper
             //Crear venta y detalles.
             CreateMap<VentaForCreationDto, Venta>();
             CreateMap<DetalleVentaForCreation, DetalleVenta>();
-
             #endregion
-
-
 
             #region //PUT: Ventas - Detalles
 
@@ -73,7 +70,7 @@ namespace PatterRepository.AutoMapper
                             VentaId = detalleA.VentaId,
                             ArticuloId = detalleA.ArticuloId,
                             Cantidad = detalleA.Cantidad,
-                            Precio = detalleA.Precio,
+                            Precio = detalleA.PrecioVenta,
                             Descuento = detalleA.Descuento
                         });
                     }
@@ -93,7 +90,7 @@ namespace PatterRepository.AutoMapper
                         artU.ArticuloId = ventaUpdate.detalleVentas.Where(i => i.DetalleVentaId == artU.DetalleVentaId).First().ArticuloId;
 
                         artU.Cantidad = ventaUpdate.detalleVentas.Where(i => i.DetalleVentaId == artU.DetalleVentaId).First().Cantidad;
-                        artU.Precio = ventaUpdate.detalleVentas.Where(i => i.DetalleVentaId == artU.DetalleVentaId).First().Precio;
+                        artU.Precio = ventaUpdate.detalleVentas.Where(i => i.DetalleVentaId == artU.DetalleVentaId).First().PrecioVenta;
                         artU.Descuento = ventaUpdate.detalleVentas.Where(i => i.DetalleVentaId == artU.DetalleVentaId).First().Descuento;
                     }
 

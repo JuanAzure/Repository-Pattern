@@ -11,7 +11,7 @@ namespace Entities.DataTransferObjects.Venta.DetalleVenta
         public int ArticuloId { get; set; }
         public string Articulo { get; set; }
         public int Cantidad { get; set; }        
-        public decimal Precio { get; set; }        
+        public decimal PrecioVenta { get; set; }        
         public decimal Descuento { get; set; }        
     }
 }

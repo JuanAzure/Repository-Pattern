@@ -2,16 +2,11 @@
 using Entities;
 using LoggerService;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PatterRepository.Utility;
 using Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PatterRepository.Extensions
 {
@@ -38,7 +33,7 @@ namespace PatterRepository.Extensions
 
         public static void ConfigureSqlServerContext(this IServiceCollection services, IConfiguration config)
         {
-            var connectionString = config["ConnectionStrings:docker"];
+            var connectionString = config["ConnectionStrings:local"];
             services.AddDbContext<RepositoryContext>
                 (o => o.UseSqlServer(connectionString));
         }

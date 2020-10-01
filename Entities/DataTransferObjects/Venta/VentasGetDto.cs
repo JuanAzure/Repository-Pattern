@@ -8,7 +8,8 @@ namespace Entities.DataTransferObjects.Venta
     {
         public int VentaId { get; set; }
 
-        public int personaId { get; set; }
+        public int PersonaId { get; set; }
+
         public string Cliente { get; set; }                
         public string TipoComprobante { get; set; }
         public string SerieComprobante { get; set; }
