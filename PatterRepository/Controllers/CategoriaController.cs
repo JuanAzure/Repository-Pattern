@@ -90,22 +90,27 @@ namespace PatterRepository.Controllers
                 _logger.LogError("CategoriaForCreationDto object sent from client is null.");
                 return BadRequest("CategoriaForCreationDto object is null");
             }
-
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the CategoriaForCreationDto object");               
+                return UnprocessableEntity(ModelState);
+            }
             var categoriaEntity = _mapper.Map<Categoria>(_categoria);
 
             _repository.Categoria.CreateCategoria(categoriaEntity);
 
-            try
-            {
-                await _repository.SaveAsync();
-            }
-            catch (DbUpdateException e)
-            {
-                var error = e.InnerException.Message;
-                if (error.Contains("UNIQUE KEY"))
-                    _logger.LogError(error);
-                return BadRequest("No se puede insertar una clave duplicada en el Nombre :" + categoriaEntity.Nombre);
-            }
+            //try
+            //{
+            //    await _repository.SaveAsync();
+            //}
+            await _repository.SaveAsync();
+            //catch (DbUpdateException e)
+            ////{
+            ////    var error = e.InnerException.Message;
+            ////    if (error.Contains("UNIQUE KEY"))
+            ////        _logger.LogError(error);
+            ////    return BadRequest("No se puede insertar una clave duplicada en el Nombre :" + categoriaEntity.Nombre);
+            //}
 
             var CategoriaToReturn = _mapper.Map<CategoriaDto>(categoriaEntity);
             return CreatedAtRoute("CategoriaId", new { id = CategoriaToReturn.categoriaId }, CategoriaToReturn);
@@ -144,6 +149,8 @@ namespace PatterRepository.Controllers
                 _logger.LogError("CategoriaForUpdateDto object sent from client is null.");
                 return BadRequest("CategoriaForUpdateDto object is null");
             }
+            if(!ModelState.IsValid)            
+                return UnprocessableEntity(ModelState);            
 
             var categoriaEntity = await _repository.Categoria.GetCategoriaAsync(id, trackChanges: true);
             if (categoriaEntity == null)
@@ -163,8 +170,8 @@ namespace PatterRepository.Controllers
                 if (error.Contains("UNIQUE KEY"))
                     _logger.LogError(error);
                 return BadRequest("No se puede insertar una clave duplicada en el Nombre :" + categoriaEntity.Nombre);
-            } 
-            
+            }
+
             return NoContent();
         }
 

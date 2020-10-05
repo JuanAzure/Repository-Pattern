@@ -4,6 +4,7 @@ using DinkToPdf.Contracts;
 using LoggerService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +26,12 @@ namespace PatterRepository
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Validacion de entidades por EFCore
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             //services.AddSingleton<ILoggerManager, LoggerManager>();
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.ConfigureLoggerService();
@@ -37,11 +44,13 @@ namespace PatterRepository
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
             }).AddNewtonsoftJson()
-              ///.AddXmlDataContractSerializerFormatters()
+              .AddXmlDataContractSerializerFormatters()
             .AddCustomCSVFormatter();
 
             services.AddScoped<TemplateGenerator>();
             services.AddAutoMapper(typeof(Startup));
+    
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

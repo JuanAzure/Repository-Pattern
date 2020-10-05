@@ -62,12 +62,17 @@ namespace PatterRepository.Controllers
 
         [Route("{categoriaId}/categorias")]
         [HttpPost]
-        public async Task<IActionResult> CreateArticulo(int categoriaId, [FromBody]  ArticuloForCreationDto articulo)
+        public async Task<IActionResult> CreateArticulo(int categoriaId, [FromBody] ArticuloForCreationDto _articulo)
         {
-            if (articulo == null)
+            if (_articulo == null)
             {
                 _logger.LogError("ArticuloForCreationDto object sent from client is null.");
                 return BadRequest("ArticuloForCreationDto object is null");
+            }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the ArticuloForCreationDto object");
+                return UnprocessableEntity(ModelState);
             }
 
             var categoria = await _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
@@ -77,9 +82,11 @@ namespace PatterRepository.Controllers
                 return NotFound();
             }
 
-            var articuloEntity = _mapper.Map<Articulo>(articulo);
+            var articuloEntity = _mapper.Map<Articulo>(_articulo);
 
             _repository.Articulo.CreateArticulo(categoriaId, articuloEntity);
+            
+
             try
             {
                 await _repository.SaveAsync();
@@ -87,9 +94,9 @@ namespace PatterRepository.Controllers
             catch (DbUpdateException e)
             {
                 var error = e.InnerException.Message;
-                if (error.Contains("UNIQUE KEY"))              
+                if (error.Contains("UNIQUE KEY"))
                     _logger.LogError(error);
-                return BadRequest("No se puede insertar una clave duplicada en el Nombre :"+ articuloEntity.Nombre);
+                return BadRequest("No se puede insertar una clave duplicada en el Nombre: " + "'"+ articuloEntity.Nombre + "'");
             }
 
             var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.ArticuloId, trackChanges: false);
@@ -104,7 +111,7 @@ namespace PatterRepository.Controllers
 
             var detalleArticulo = await _repository.DetalleVenta.GetExistsArticuloDetallesAsync(id, trackChanges: false);
 
-            if  (detalleArticulo.Count() > 0 )
+            if (detalleArticulo.Count() > 0)
             {
                 _logger.LogInfo($"El producto con id: {id} existe dentro de los detalles de ventas en la database.");
                 return BadRequest($"El producto con id: {id} existe dentro de los detalles de ventas en la base de datos.");
@@ -116,7 +123,7 @@ namespace PatterRepository.Controllers
                 _logger.LogInfo($"Categoria with id: {categoriaId} doesn't exist in the  database.");
                 return NotFound();
             }
-            
+
 
             var ArticuloForCategoria = await _repository.Articulo.GetArticuloCategoriaAsync(categoriaId, id, trackChanges: false);
 
@@ -130,7 +137,6 @@ namespace PatterRepository.Controllers
             return NoContent();
         }
 
-
         [Route("{id}/categorias/{categoriaId}")]
         [HttpPut]
         public async Task<IActionResult> UpdateArticuloForCategoria(int categoriaId, int id, [FromBody] ArticuloForUpdateDto articulo)
@@ -139,6 +145,11 @@ namespace PatterRepository.Controllers
             {
                 _logger.LogError("ArticuloForUpdateDto object sent from client is null.");
                 return BadRequest("ArticuloForUpdateDto object is null");
+            }
+            if(!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the ArticuloForUpdateDto object");
+                return UnprocessableEntity(ModelState);
             }
 
             var categoria = await _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
