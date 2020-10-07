@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Entities.RequestFeatures;
 using LoggerService;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using PatterRepository.ActionFilters;
 
 namespace PatterRepository.Controllers
 {
@@ -46,6 +48,29 @@ namespace PatterRepository.Controllers
             return Ok(articulosDto);
         }
 
+        [Route("{categoriaId}/categorias")]
+        [HttpGet]
+        public async Task<IActionResult> GetArticulosCategoria(int categoriaId, [FromQuery] ArticuloParameters articuloParameters)
+        {
+            if(!articuloParameters.ValidaStockRange)
+            {
+                return BadRequest("El stock máximo no puede ser menor que la stock mínima");
+            }
+            var articulos = await _repository.Articulo.GetArticuloCategoriaAsync(categoriaId, articuloParameters, trackChanges: false);
+            if (articulos == null)
+            {
+                _logger.LogInfo($"El objecto Articulo no contiene datos. {articulos.Count()}");
+                return NotFound();
+            }
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(articulos.MetaData));
+
+            var articulosDto = _mapper.Map<IEnumerable<ArticuloDto>>(articulos);
+            _logger.LogInfo($"Returning {articulosDto.Count()} Articulos.");
+            return Ok(articulosDto);
+        }
+
+
         [HttpGet("{id}", Name = "ArticuloId")]
         public async Task<IActionResult> GetArticulo(int id)
         {
@@ -62,31 +87,17 @@ namespace PatterRepository.Controllers
 
         [Route("{categoriaId}/categorias")]
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateArticulo(int categoriaId, [FromBody] ArticuloForCreationDto _articulo)
         {
-            if (_articulo == null)
-            {
-                _logger.LogError("ArticuloForCreationDto object sent from client is null.");
-                return BadRequest("ArticuloForCreationDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the ArticuloForCreationDto object");
-                return UnprocessableEntity(ModelState);
-            }
-
             var categoria = await _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
             if (categoria == null)
             {
                 _logger.LogInfo($"Categoria with id: {categoriaId} doesn't exist in the database.");
                 return NotFound();
             }
-
             var articuloEntity = _mapper.Map<Articulo>(_articulo);
-
             _repository.Articulo.CreateArticulo(categoriaId, articuloEntity);
-            
-
             try
             {
                 await _repository.SaveAsync();
@@ -96,7 +107,7 @@ namespace PatterRepository.Controllers
                 var error = e.InnerException.Message;
                 if (error.Contains("UNIQUE KEY"))
                     _logger.LogError(error);
-                return BadRequest("No se puede insertar una clave duplicada en el Nombre: " + "'"+ articuloEntity.Nombre + "'");
+                return BadRequest("No se puede insertar una clave duplicada en el Nombre: " + "'" + articuloEntity.Nombre + "'");
             }
 
             var articuloCategoria = await _repository.Articulo.GetArticuloAsync(articuloEntity.ArticuloId, trackChanges: false);
@@ -106,32 +117,10 @@ namespace PatterRepository.Controllers
 
         [Route("{id}/categorias/{categoriaId}")]
         [HttpDelete]
+        [ServiceFilter(typeof(ValidateArticuloExistsAttribute))]
         public async Task<IActionResult> DeleteArticuloForCategoria(int categoriaId, int id)
         {
-
-            var detalleArticulo = await _repository.DetalleVenta.GetExistsArticuloDetallesAsync(id, trackChanges: false);
-
-            if (detalleArticulo.Count() > 0)
-            {
-                _logger.LogInfo($"El producto con id: {id} existe dentro de los detalles de ventas en la database.");
-                return BadRequest($"El producto con id: {id} existe dentro de los detalles de ventas en la base de datos.");
-            }
-
-            var categoria = await _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
-            if (categoria == null)
-            {
-                _logger.LogInfo($"Categoria with id: {categoriaId} doesn't exist in the  database.");
-                return NotFound();
-            }
-
-
-            var ArticuloForCategoria = await _repository.Articulo.GetArticuloCategoriaAsync(categoriaId, id, trackChanges: false);
-
-            if (ArticuloForCategoria == null)
-            {
-                _logger.LogInfo($"Employee with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var ArticuloForCategoria = HttpContext.Items["articulo"] as Articulo;
             _repository.Articulo.DeleteArticulo(ArticuloForCategoria);
             await _repository.SaveAsync();
             return NoContent();
@@ -139,33 +128,11 @@ namespace PatterRepository.Controllers
 
         [Route("{id}/categorias/{categoriaId}")]
         [HttpPut]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateArticuloExistsAttribute))]
         public async Task<IActionResult> UpdateArticuloForCategoria(int categoriaId, int id, [FromBody] ArticuloForUpdateDto articulo)
         {
-            if (articulo == null)
-            {
-                _logger.LogError("ArticuloForUpdateDto object sent from client is null.");
-                return BadRequest("ArticuloForUpdateDto object is null");
-            }
-            if(!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the ArticuloForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
-
-            var categoria = await _repository.Categoria.GetCategoriaAsync(categoriaId, trackChanges: false);
-            if (categoria == null)
-            {
-                _logger.LogInfo($"Categoria with id: {categoriaId} doesn't exist in the database.");
-
-                return NotFound();
-            }
-            var articuloEntity = await _repository.Articulo.GetArticuloCategoriaAsync(categoriaId, id, trackChanges: true);
-
-            if (articuloEntity == null)
-            {
-                _logger.LogInfo($"Articulo with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var articuloEntity = HttpContext.Items["articulo"] as Articulo;
             _mapper.Map(articulo, articuloEntity);
 
             try
@@ -175,6 +142,49 @@ namespace PatterRepository.Controllers
             catch (DbUpdateException e)
             {
 
+                var error = e.InnerException.Message;
+                if (error.Contains("UNIQUE KEY"))
+                    _logger.LogError(error);
+                return BadRequest("No se puede insertar una clave duplicada en el Nombre :" + articuloEntity.Nombre);
+            }
+            return NoContent();
+        }
+
+
+        [Route("{id}/categorias/{categoriaId}")]
+        [HttpPatch]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateArticuloExistsAttribute))]
+        public async Task<IActionResult> PatchUpdateArticulo(int categoriaId, int id, [FromBody] JsonPatchDocument<ArticuloForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+
+            var articuloEntity = HttpContext.Items["articulo"] as Articulo;
+
+            var articuloPatch = _mapper.Map<ArticuloForUpdateDto>(articuloEntity);
+
+            patchDoc.ApplyTo(articuloPatch);
+
+            TryValidateModel(articuloPatch);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
+            _mapper.Map(articuloPatch, articuloEntity);
+
+            try
+            {
+                await _repository.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
                 var error = e.InnerException.Message;
                 if (error.Contains("UNIQUE KEY"))
                     _logger.LogError(error);

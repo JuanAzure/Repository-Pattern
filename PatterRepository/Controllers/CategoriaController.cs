@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -10,7 +9,8 @@ using LoggerService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PatterRepository.ModelBinders;
-
+using Microsoft.AspNetCore.JsonPatch;
+using PatterRepository.ActionFilters;
 namespace PatterRepository.Controllers
 {
     [Route("api/categorias")]
@@ -22,7 +22,6 @@ namespace PatterRepository.Controllers
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
         #endregion
-
         #region Constructor
         public CategoriaController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
         {
@@ -31,8 +30,7 @@ namespace PatterRepository.Controllers
             _mapper = mapper;
         }
         #endregion
-
-        [HttpGet]
+       [HttpGet]
         public async Task<IActionResult> GetAllCategorias()
         {
             var categorias = await _repository.Categoria.GetAllCategoriaAsync(trackChanges: false);
@@ -47,6 +45,7 @@ namespace PatterRepository.Controllers
         }
 
         [HttpGet("{id}", Name = "CategoriaId")]
+        [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
         public async Task<IActionResult> GetCategoria(int id)
         {
             var categoria = await _repository.Categoria.GetCategoriaAsync(id, trackChanges: false);
@@ -58,6 +57,99 @@ namespace PatterRepository.Controllers
             var categoriaDto = _mapper.Map<CategoriaDto>(categoria);
             _logger.LogInfo($"Returning Controller - Name:{nameof(GetCategoria)}");
             return Ok(categoriaDto);
+        }
+       
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> CreateCategoria([FromBody] CategoriaForCreationDto _categoria)
+        {
+            var categoriaEntity = _mapper.Map<Categoria>(_categoria);
+            _repository.Categoria.CreateCategoria(categoriaEntity);
+
+            try
+            {
+                await _repository.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                var error = e.InnerException.Message;
+                if (error.Contains("UNIQUE KEY"))
+                    _logger.LogError(error);
+                return BadRequest("No se puede insertar una clave duplicada en el Nombre :" + categoriaEntity.Nombre);
+            }
+            var CategoriaToReturn = _mapper.Map<CategoriaDto>(categoriaEntity);
+            return CreatedAtRoute("CategoriaId", new { id = CategoriaToReturn.categoriaId }, CategoriaToReturn);
+        }
+
+        [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
+        public async Task<IActionResult> UpdateCategoria(int id, [FromBody] CategoriaForUpdateDto _categoria)
+        {
+            var categoriaEntity = HttpContext.Items["categoria"] as Categoria;
+            _mapper.Map(_categoria, categoriaEntity);
+            try
+            {
+                await _repository.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                var error = e.InnerException.Message;
+                if (error.Contains("UNIQUE KEY"))
+                    _logger.LogError(error);
+                return BadRequest("No se puede insertar una clave duplicada en el Nombre :" + categoriaEntity.Nombre);
+            }
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PartiallyUpdateCategoria(int id, [FromBody] JsonPatchDocument<CategoriaForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+
+            var categoriaEntity = await _repository.Categoria.GetCategoriaAsync(id, trackChanges: true);
+            if (categoriaEntity == null)
+            {
+                _logger.LogInfo($"Categoria with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            var categoriaPatch = _mapper.Map<CategoriaForUpdateDto>(categoriaEntity);
+
+            patchDoc.ApplyTo(categoriaPatch);
+
+            TryValidateModel(categoriaPatch);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+            _mapper.Map(categoriaPatch, categoriaEntity);
+            try
+            {
+                await _repository.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                var error = e.InnerException.Message;
+                if (error.Contains("UNIQUE KEY"))
+                    _logger.LogError(error);
+                return BadRequest("No se puede insertar una clave duplicada en el Nombre :" + categoriaEntity.Nombre);
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateCategoryExistsAttribute))]
+        public async Task<IActionResult> DeleteCategoria(int id)
+        {            
+            var categoriaEntity = HttpContext.Items["categoria"] as Categoria;
+            _repository.Categoria.DeleteCategoria(categoriaEntity);
+            await _repository.SaveAsync();
+            return NoContent();
         }
 
 
@@ -82,41 +174,6 @@ namespace PatterRepository.Controllers
             return Ok(categoriesToReturn);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateCategoria([FromBody] CategoriaForCreationDto _categoria)
-        {
-            if (_categoria == null)
-            {
-                _logger.LogError("CategoriaForCreationDto object sent from client is null.");
-                return BadRequest("CategoriaForCreationDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the CategoriaForCreationDto object");               
-                return UnprocessableEntity(ModelState);
-            }
-            var categoriaEntity = _mapper.Map<Categoria>(_categoria);
-
-            _repository.Categoria.CreateCategoria(categoriaEntity);
-
-            //try
-            //{
-            //    await _repository.SaveAsync();
-            //}
-            await _repository.SaveAsync();
-            //catch (DbUpdateException e)
-            ////{
-            ////    var error = e.InnerException.Message;
-            ////    if (error.Contains("UNIQUE KEY"))
-            ////        _logger.LogError(error);
-            ////    return BadRequest("No se puede insertar una clave duplicada en el Nombre :" + categoriaEntity.Nombre);
-            //}
-
-            var CategoriaToReturn = _mapper.Map<CategoriaDto>(categoriaEntity);
-            return CreatedAtRoute("CategoriaId", new { id = CategoriaToReturn.categoriaId }, CategoriaToReturn);
-        }
-
-
         [HttpPost("collection")]
         public async Task<IActionResult> CreateCategoriaCollection([FromBody]
           IEnumerable<CategoriaForCreationDto> categoriaCollection)
@@ -140,55 +197,5 @@ namespace PatterRepository.Controllers
 
         }
 
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategoria(int id, [FromBody] CategoriaForUpdateDto _categoria)
-        {
-            if (_categoria == null)
-            {
-                _logger.LogError("CategoriaForUpdateDto object sent from client is null.");
-                return BadRequest("CategoriaForUpdateDto object is null");
-            }
-            if(!ModelState.IsValid)            
-                return UnprocessableEntity(ModelState);            
-
-            var categoriaEntity = await _repository.Categoria.GetCategoriaAsync(id, trackChanges: true);
-            if (categoriaEntity == null)
-            {
-                _logger.LogInfo($"Categoria with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
-            _mapper.Map(_categoria, categoriaEntity);
-
-            try
-            {
-                await _repository.SaveAsync();
-            }
-            catch (DbUpdateException e)
-            {
-                var error = e.InnerException.Message;
-                if (error.Contains("UNIQUE KEY"))
-                    _logger.LogError(error);
-                return BadRequest("No se puede insertar una clave duplicada en el Nombre :" + categoriaEntity.Nombre);
-            }
-
-            return NoContent();
-        }
-
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategoria(int id)
-        {
-            var categoriaEntity = await _repository.Categoria.GetCategoriaAsync(id, trackChanges: false);
-
-            if (categoriaEntity == null)
-            {
-                _logger.LogInfo($"Categoria with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
-            _repository.Categoria.DeleteCategoria(categoriaEntity);
-            await _repository.SaveAsync();
-            return NoContent();
-        }
     }
 }

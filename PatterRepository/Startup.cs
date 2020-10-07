@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PatterRepository.ActionFilters;
 using PatterRepository.Extensions;
 using PatterRepository.Utility;
 
@@ -31,6 +32,12 @@ namespace PatterRepository
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+            
+            //Servicio de Filter!
+            services.AddScoped<ValidationFilterAttribute>();
+            services.AddScoped<ValidateCategoryExistsAttribute>();
+            services.AddScoped<ValidateArticuloExistsAttribute>();
+
 
             //services.AddSingleton<ILoggerManager, LoggerManager>();
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
