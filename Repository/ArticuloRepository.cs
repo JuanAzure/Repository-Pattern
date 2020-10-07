@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Repository.Extensions;
 namespace Repository
 {
     public class ArticuloRepository : RepositoryBase<Articulo>, IArticuloRepository
@@ -23,22 +23,12 @@ namespace Repository
         public async Task<PagedList<Articulo>> GetArticuloCategoriaAsync(int categoriaId, ArticuloParameters articuloParameters, bool trackChanges)
         {
            var articulos =  await FindByCondition(c => c.CategoriaId.Equals(categoriaId) && (
-                                                  c.Stock >= articuloParameters.MinStock && c.Stock <=                                             articuloParameters.MaxStock), trackChanges)                                   
-                                                  .OrderBy(c => c.ArticuloId)
+                                                  c.Stock >= articuloParameters.MinStock && c.Stock <=                                             articuloParameters.MaxStock), trackChanges)                                                               
+                                                  .OrderBy(c => c.Stock)
                                                   .ToListAsync();
             return PagedList<Articulo>
                  .ToPagedList(articulos, articuloParameters.PageNumber, articuloParameters.PageSize);
         }
-
-        public async Task<IEnumerable<Articulo>> GetArticuloStock(int categoriaId, ArticuloParameters articuloParameters, bool trackChanges)
-        {
-            var articulos = await FindByCondition(c => c.CategoriaId.Equals(categoriaId) && (
-                                                  c.Stock >= articuloParameters.MinStock && c.Stock <= articuloParameters.MaxStock), trackChanges)
-                                                   .OrderBy(c => c.Stock)
-                                                   .ToListAsync();
-            return articulos;
-        }
-
         public async Task<Articulo> GetArticuloAsync(int articuloId, bool trackChanges) =>
 
            await FindByCondition(c => c.ArticuloId.Equals(articuloId), trackChanges)

@@ -6,5 +6,7 @@ namespace Entities.RequestFeatures
         public uint MinStock { get; set; }
         public uint MaxStock { get; set; } = int.MaxValue;
         public bool ValidaStockRange => MaxStock > MinStock;
+
+        public string SearchTerm { get; set; }
     }
 }
