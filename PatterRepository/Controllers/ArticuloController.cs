@@ -23,14 +23,16 @@ namespace PatterRepository.Controllers
         private readonly ILoggerManager _logger;
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<ArticuloDto> _dataShaper;
         #endregion
 
         #region Constructor
-        public ArticuloController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public ArticuloController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper, IDataShaper<ArticuloDto> dataShaper)
         {
             _logger = logger;
             _repository = repository;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
         #endregion
 
@@ -67,7 +69,10 @@ namespace PatterRepository.Controllers
 
             var articulosDto = _mapper.Map<IEnumerable<ArticuloDto>>(articulos);
             _logger.LogInfo($"Returning {articulosDto.Count()} Articulos.");
-            return Ok(articulosDto);
+            var articuloDataShaper = _dataShaper.ShapeData(articulosDto, articuloParameters.Fields);
+
+            return Ok(articuloDataShaper);
+            
         }
 
 

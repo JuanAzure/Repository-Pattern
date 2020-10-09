@@ -46,7 +46,7 @@ namespace PatterRepository.Extensions
         public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
             builder.AddMvcOptions(config => config.OutputFormatters.Add(new CsvOutputFormatter()));
 
-        public static IApplicationBuilder ConfigureCor(this IApplicationBuilder app)
+        public static IApplicationBuilder ConfigureCors(this IApplicationBuilder app)
         {
             app.UseCors(builder =>
              builder.WithOrigins("http://localhost:4200", "http://localhost:4201")

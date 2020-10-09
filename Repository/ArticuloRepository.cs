@@ -22,10 +22,12 @@ namespace Repository
 
         public async Task<PagedList<Articulo>> GetArticuloCategoriaAsync(int categoriaId, ArticuloParameters articuloParameters, bool trackChanges)
         {
-           var articulos =  await FindByCondition(c => c.CategoriaId.Equals(categoriaId) && (
-                                                  c.Stock >= articuloParameters.MinStock && c.Stock <=                                             articuloParameters.MaxStock), trackChanges)                                                               
-                                                  .OrderBy(c => c.Stock)
-                                                  .ToListAsync();
+            var articulos = await FindByCondition(c => c.CategoriaId.Equals(categoriaId), trackChanges)
+                                 .FilterArticulos(articuloParameters.MinStock, articuloParameters.MaxStock)
+                                 .Search(articuloParameters.SearchTerm)
+                                 .Sort(articuloParameters.OrderBy)                                 
+                                .ToListAsync();
+
             return PagedList<Articulo>
                  .ToPagedList(articulos, articuloParameters.PageNumber, articuloParameters.PageSize);
         }

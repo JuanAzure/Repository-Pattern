@@ -1,6 +1,8 @@
 using AutoMapper;
+using Contracts;
 using DinkToPdf;
 using DinkToPdf.Contracts;
+using Entities.DataTransferObjects;
 using LoggerService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using PatterRepository.ActionFilters;
 using PatterRepository.Extensions;
 using PatterRepository.Utility;
+using Repository.DataShaping;
 
 namespace PatterRepository
 {
@@ -38,6 +41,8 @@ namespace PatterRepository
             services.AddScoped<ValidateCategoryExistsAttribute>();
             services.AddScoped<ValidateArticuloExistsAttribute>();
 
+            //Servicio DataShaper
+            services.AddScoped<IDataShaper<ArticuloDto>, DataShaper<ArticuloDto>>();
 
             //services.AddSingleton<ILoggerManager, LoggerManager>();
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
@@ -74,7 +79,7 @@ namespace PatterRepository
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.ConfigureCor();
+            app.ConfigureCors();
 
             //app.ConfigureExceptionHandler(logger);
             app.ConfigureCustomExceptionMiddleware();
