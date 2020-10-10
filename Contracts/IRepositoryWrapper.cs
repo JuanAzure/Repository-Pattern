@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Contracts
 {
@@ -15,12 +12,9 @@ namespace Contracts
         IItemRepository Item { get; }
         ICustomerRepository Customer { get; }
         IOrderRepository Order { get; }
-
         IOrderItemsRepository OrderItems { get; }
-
         IVentaRepository Venta { get; }
         IDetalleVentaRepository DetalleVenta { get; }
-
         Task SaveAsync();
     }
 }
