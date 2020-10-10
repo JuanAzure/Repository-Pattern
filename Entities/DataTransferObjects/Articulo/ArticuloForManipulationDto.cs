@@ -27,7 +27,6 @@ namespace Entities.DataTransferObjects
         [Required(ErrorMessage = "Descripcion is requerid")]
         [MinLength(5, ErrorMessage = "Descripcion min = 5 characters")]
         [MaxLength(60, ErrorMessage = "Descripcion max = 60 characters")]
-
         public string Descripcion { get; set; }
         public bool Condicion { get; set; }
 

@@ -16,7 +16,7 @@ namespace PatterRepository.Utility
         public string GetHTMLString()
         {
             //var employees = DataStorage.GetAllEmployess();
-            var employees = _repoWrapper.Owner.FindAll(trackChanges:false);
+            var employees = _repoWrapper.Articulo.FindAll(trackChanges:false);
             var sb = new StringBuilder();
             sb.Append(@"
                         <html>
@@ -40,7 +40,7 @@ namespace PatterRepository.Utility
                                     <td>{2}</td>  
                                     <td>{3}</td>                                    
 
-                                  </tr>", emp.Id, emp.DateOfBirth.ToShortDateString(),emp.Name,emp.Address);
+                                  </tr>", emp.ArticuloId, emp.Nombre,emp.Categoria,emp.Stock);
             }
 
             sb.Append(@"
