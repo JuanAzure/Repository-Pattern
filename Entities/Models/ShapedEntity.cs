@@ -8,7 +8,7 @@ namespace Entities.Models
         {
             Entity = new Entity();
         }
-        public Guid Id { get; set; }
+        public int  articuloId { get; set; }
         public Entity Entity { get; set; }
     }
 }

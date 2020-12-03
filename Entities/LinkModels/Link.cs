@@ -13,8 +13,6 @@
             Href = href;
             Rel = rel;
             Method = method;
-                
-
         }
 
     }

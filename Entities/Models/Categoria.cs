@@ -19,6 +19,7 @@ namespace Entities.Models
         [StringLength(100, ErrorMessage = "Descripcion can`t be than 60 characters")]
         public string Descripcion { get; set; }
         public bool? Condicion { get; set; }
+        public string Columna1 { get; set; }
         public ICollection<Articulo> Articulos { get; set; }
     }
 }

@@ -1,79 +1,76 @@
 ﻿using Contracts;
 using Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Repository
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
-        private RepositoryContext _repoContext;
+        private RepositoryContext _repositoryContext;
 
-        private IArticuloRepository _articulo;
-        private ICategoriaRepository _categoria;
-        private IPersonaRepository _persona;
-        private IVentaRepository _Venta;
-        private IDetalleVentaRepository _DetalleVenta;
+        private IArticuloRepository _articuloRepository;
+        private ICategoriaRepository _categoriaRepository;
+        private IPersonaRepository _personaRepository;
+        private IVentaRepository _ventaRepository;
+        private IDetalleVentaRepository _detalleVentaRepository;
         public IArticuloRepository Articulo
         {
             get
             {
-                if (_articulo == null)
+                if (_articuloRepository == null)
                 {
-                    _articulo = new ArticuloRepository(_repoContext);
+                    _articuloRepository = new ArticuloRepository(_repositoryContext);
                 }
-                return _articulo;
+                return _articuloRepository;
             }
         }
         public ICategoriaRepository Categoria
         {
             get
             {
-                if (_categoria == null)
+                if (_categoriaRepository == null)
                 {
-                    _categoria = new CategoriaRepository(_repoContext);
+                    _categoriaRepository = new CategoriaRepository(_repositoryContext);
                 }
-                return _categoria;
+                return _categoriaRepository;
             }
         }
         public IPersonaRepository Persona
         {
             get
             {
-                if (_persona == null)
+                if (_personaRepository == null)
                 {
-                    _persona = new PersonaRepository(_repoContext);
+                    _personaRepository = new PersonaRepository(_repositoryContext);
                 }
-                return _persona;
+                return _personaRepository;
             }
         }
         public IVentaRepository Venta
         {
             get
             {
-                if (_Venta == null)
+                if (_ventaRepository == null)
                 {
-                    _Venta = new VentaRepository(_repoContext);
+                    _ventaRepository = new VentaRepository(_repositoryContext);
                 }
-                return _Venta;
+                return _ventaRepository;
             }
         }
         public IDetalleVentaRepository DetalleVenta
         {
             get
             {
-                if (_DetalleVenta == null)
+                if (_detalleVentaRepository == null)
                 {
-                    _DetalleVenta = new DetalleVentaRepository(_repoContext);
+                    _detalleVentaRepository = new DetalleVentaRepository(_repositoryContext);
                 }
-                return _DetalleVenta;
+                return _detalleVentaRepository;
             }
         }
 
-        public RepositoryWrapper(RepositoryContext repoContext)=> _repoContext = repoContext;       
-        public async Task SaveAsync()=> await _repoContext.SaveChangesAsync();        
+        public RepositoryWrapper(RepositoryContext repoContext)=> _repositoryContext = repoContext;       
+        public async Task SaveAsync()=> await _repositoryContext.SaveChangesAsync();        
 
     }
 }
